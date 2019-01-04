@@ -10,6 +10,7 @@ use yii\base\InvalidConfigException;
 use yii\validators\IpValidator;
 use yii\web\HeaderCollection;
 use yii\web\NotFoundHttpException;
+use yii\web\RequestParserInterface;
 
 class Request extends \yii\web\Request
 {
@@ -115,9 +116,51 @@ class Request extends \yii\web\Request
         return $this->_rawBody;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setRawBody($body)
     {
         $this->_rawBody = $body;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBodyParams()
+    {
+        if ($this->_bodyParams === null) {
+            // @todo: Implement method tunneling
+            $rawContentType = $this->getContentType();
+            if (($pos = strpos($rawContentType, ';')) !== false) {
+                // e.g. text/html; charset=UTF-8
+                $contentType = substr($rawContentType, 0, $pos);
+            } else {
+                $contentType = $rawContentType;
+            }
+
+            if (isset($this->parsers[$contentType])) {
+                $parser = Yii::createObject($this->parsers[$contentType]);
+                if (!($parser instanceof RequestParserInterface)) {
+                    throw new InvalidConfigException("The '$contentType' request parser is invalid. It must implement the yii\\web\\RequestParserInterface.");
+                }
+                $this->_bodyParams = $parser->parse($this->getRawBody(), $rawContentType);
+            } elseif (isset($this->parsers['*'])) {
+                $parser = Yii::createObject($this->parsers['*']);
+                if (!($parser instanceof RequestParserInterface)) {
+                    throw new InvalidConfigException('The fallback request parser is invalid. It must implement the yii\\web\\RequestParserInterface.');
+                }
+                $this->_bodyParams = $parser->parse($this->getRawBody(), $rawContentType);
+            } elseif ($this->getMethod() === 'POST') {
+                // PHP has already parsed the body so we have all params in $_POST
+                $this->_bodyParams = $this->request->getParsedBody();
+            } else {
+                $this->_bodyParams = [];
+                mb_parse_str($this->getRawBody(), $this->_bodyParams);
+            }
+        }
+
+        return $this->_bodyParams;
     }
 
     /**

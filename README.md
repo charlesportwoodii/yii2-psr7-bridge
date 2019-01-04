@@ -161,7 +161,10 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Implement `yii\web\Response::redirect`.
 - [x] Implement `yii\web\Response::refresh`.
 - [x] GET query parameters `yii\web\Request::get()`.
-- [ ] POST parameters `yii\web\Request::post()`.
+- [x] POST parameters `yii\web\Request::post()`.
+- [ ] `yii\web\Request::$methodParam` support.
+- [ ] `yii\web\Request::getAuthCredentials()`.
+- [ ] `yii\web\Request::loadCookies()`.
 - [ ] Probably more things I haven't tested yet.
 - [ ] Test Coverage
 

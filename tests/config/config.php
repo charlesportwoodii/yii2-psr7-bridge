@@ -16,7 +16,13 @@ return [
         'request' => [
             'class' => \yii\Psr7\web\Request::class,
             'request' => null,
-            'enableCookieValidation' => false
+            'enableCookieValidation' => false,
+            'enableCsrfValidation' => false,
+            'enableCsrfCookie' => false,
+            'parsers' => [
+                'application/json' => \yii\web\JsonParser::class,
+            ]
+
         ],
         'response' => [
             'class' => \yii\Psr7\web\Response::class,
