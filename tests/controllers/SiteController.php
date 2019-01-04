@@ -13,6 +13,40 @@ class SiteController extends Controller
     {
         $response = Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
+        return [
+            'hello' => 'world',
+        ];
+    }
+
+    public function actionRedirect()
+    {
+        $response = Yii::$app->response->redirect('/site/index');
+        return;
+    }
+
+    public function actionRefresh()
+    {
+        $response = Yii::$app->response->refresh('#foo');
+        return;
+    }
+
+    public function actionPost()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        return Yii::$app->request->post();
+    }
+
+    public function actionGet()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        return Yii::$app->request->get();
+    }
+
+    public function actionCookie()
+    {
+        $response = Yii::$app->response;
         $response->cookies->add(new Cookie([
             'name' => 'test',
             'value' => 'test',
@@ -23,9 +57,6 @@ class SiteController extends Controller
             'name' => 'test2',
             'value' => 'test2'
         ]));
-
-        return \array_merge([
-            'hello' => 'world',
-        ], Yii::$app->request->get());
+        return;
     }
 }

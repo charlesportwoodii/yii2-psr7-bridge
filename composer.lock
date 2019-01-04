@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68965bbab17f94b03fef8ba2c1fbae59",
+    "content-hash": "f4b0d0c1db2046c4e40a169be0a4c510",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -270,108 +270,6 @@
             "time": "2018-02-23T01:58:20+00:00"
         },
         {
-            "name": "http-interop/http-factory-diactoros",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/http-interop/http-factory-diactoros.git",
-                "reference": "7d19904a7e1047d316211e4453a30f5bdd504294"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/http-interop/http-factory-diactoros/zipball/7d19904a7e1047d316211e4453a30f5bdd504294",
-                "reference": "7d19904a7e1047d316211e4453a30f5bdd504294",
-                "shasum": ""
-            },
-            "require": {
-                "psr/http-factory": "^1.0",
-                "zendframework/zend-diactoros": "^1.3"
-            },
-            "provide": {
-                "psr/http-factory-implementation": "^1.0"
-            },
-            "require-dev": {
-                "http-interop/http-factory-tests": "^0.5",
-                "phpunit/phpunit": "^6.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Http\\Factory\\Diactoros\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "An HTTP Factory using Zend Diactoros",
-            "keywords": [
-                "factory",
-                "http",
-                "psr-17",
-                "psr-7"
-            ],
-            "time": "2018-07-31T19:31:26+00:00"
-        },
-        {
-            "name": "psr/http-factory",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
-                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0",
-                "psr/http-message": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Message\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interfaces for PSR-7 HTTP message factories",
-            "keywords": [
-                "factory",
-                "http",
-                "message",
-                "psr",
-                "psr-17",
-                "psr-7",
-                "request",
-                "response"
-            ],
-            "time": "2018-07-30T21:54:04+00:00"
-        },
-        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -420,85 +318,6 @@
                 "response"
             ],
             "time": "2016-08-06T14:39:51+00:00"
-        },
-        {
-            "name": "spiral/goridge",
-            "version": "v2.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spiral/goridge.git",
-                "reference": "1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spiral/goridge/zipball/1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694",
-                "reference": "1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~6.0"
-            },
-            "type": "goridge",
-            "autoload": {
-                "psr-4": {
-                    "Spiral\\Goridge\\": "php-src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anton Titov / Wolfy-J",
-                    "email": "wolfy.jd@gmail.com"
-                }
-            ],
-            "description": "High-performance PHP-to-Golang RPC bridge",
-            "time": "2018-12-20T12:06:05+00:00"
-        },
-        {
-            "name": "spiral/roadrunner",
-            "version": "v1.2.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spiral/roadrunner.git",
-                "reference": "4258f54f5b1ef25a692644d2bd58256092b7c23f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spiral/roadrunner/zipball/4258f54f5b1ef25a692644d2bd58256092b7c23f",
-                "reference": "4258f54f5b1ef25a692644d2bd58256092b7c23f",
-                "shasum": ""
-            },
-            "require": {
-                "http-interop/http-factory-diactoros": "^1.0",
-                "php": "^7.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0",
-                "spiral/goridge": "^2.0"
-            },
-            "type": "server",
-            "autoload": {
-                "psr-4": {
-                    "Spiral\\RoadRunner\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anton Titov / Wolfy-J",
-                    "email": "wolfy.jd@gmail.com"
-                }
-            ],
-            "description": "High-performance PHP load balancer and process manager library for Golang",
-            "time": "2018-12-26T12:11:55+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -773,6 +592,56 @@
                 "instantiate"
             ],
             "time": "2017-07-22T11:58:36+00:00"
+        },
+        {
+            "name": "http-interop/http-factory-diactoros",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/http-interop/http-factory-diactoros.git",
+                "reference": "7d19904a7e1047d316211e4453a30f5bdd504294"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/http-interop/http-factory-diactoros/zipball/7d19904a7e1047d316211e4453a30f5bdd504294",
+                "reference": "7d19904a7e1047d316211e4453a30f5bdd504294",
+                "shasum": ""
+            },
+            "require": {
+                "psr/http-factory": "^1.0",
+                "zendframework/zend-diactoros": "^1.3"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "^1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "^0.5",
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Http\\Factory\\Diactoros\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "An HTTP Factory using Zend Diactoros",
+            "keywords": [
+                "factory",
+                "http",
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2018-07-31T19:31:26+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1554,6 +1423,58 @@
             "time": "2018-12-12T07:20:32+00:00"
         },
         {
+            "name": "psr/http-factory",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2018-07-30T21:54:04+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.1.0",
             "source": {
@@ -2210,6 +2131,85 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-10-03T07:35:21+00:00"
+        },
+        {
+            "name": "spiral/goridge",
+            "version": "v2.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spiral/goridge.git",
+                "reference": "1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spiral/goridge/zipball/1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694",
+                "reference": "1d9d4cc79ddfc73a0e92d9c77ebdf54abcade694",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "goridge",
+            "autoload": {
+                "psr-4": {
+                    "Spiral\\Goridge\\": "php-src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Titov / Wolfy-J",
+                    "email": "wolfy.jd@gmail.com"
+                }
+            ],
+            "description": "High-performance PHP-to-Golang RPC bridge",
+            "time": "2018-12-20T12:06:05+00:00"
+        },
+        {
+            "name": "spiral/roadrunner",
+            "version": "v1.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spiral/roadrunner.git",
+                "reference": "4258f54f5b1ef25a692644d2bd58256092b7c23f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spiral/roadrunner/zipball/4258f54f5b1ef25a692644d2bd58256092b7c23f",
+                "reference": "4258f54f5b1ef25a692644d2bd58256092b7c23f",
+                "shasum": ""
+            },
+            "require": {
+                "http-interop/http-factory-diactoros": "^1.0",
+                "php": "^7.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0",
+                "spiral/goridge": "^2.0"
+            },
+            "type": "server",
+            "autoload": {
+                "psr-4": {
+                    "Spiral\\RoadRunner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Titov / Wolfy-J",
+                    "email": "wolfy.jd@gmail.com"
+                }
+            ],
+            "description": "High-performance PHP load balancer and process manager library for Golang",
+            "time": "2018-12-26T12:11:55+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",

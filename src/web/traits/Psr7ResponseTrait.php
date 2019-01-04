@@ -7,7 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 
 trait Psr7ResponseTrait
 {
-     /**
+
+    /**
      * Returns a PSR7 response
      *
      * @return ResponseInterface
@@ -19,7 +20,6 @@ trait Psr7ResponseTrait
         $this->trigger(self::EVENT_AFTER_PREPARE);
         $stream = $this->getPsr7Content();
 
-        Yii::info($this->getCookies()->toArray());
         $response = new \Zend\Diactoros\Response(
             $stream,
             $this->getStatusCode(),
@@ -73,7 +73,6 @@ trait Psr7ResponseTrait
 
             $data = "$cookie->name=$value";
 
-            Yii::info(print_r($cookie, true));
             if ($cookie->expire != null) {
                 $data .= "; Expires={$cookie->expire}";
             }
@@ -109,7 +108,7 @@ trait Psr7ResponseTrait
     {
         if ($this->stream === null) {
             $stream = fopen('php://memory', 'r+');
-            fwrite($stream, $this->content);
+            fwrite($stream, $this->content ?? '');
             rewind($stream);
             $this->stream = $stream;
         }

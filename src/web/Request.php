@@ -81,9 +81,10 @@ class Request extends \yii\web\Request
     {
         if ($this->_headers === null) {
             $this->_headers = new HeaderCollection;
-            $headers = $this->request->getHeaders();
-            foreach ($headers as $name => $value) {
-                $this->_headers->add($name, $value);
+            foreach ($this->request->getHeaders() as $name => $values) {
+                foreach ($values as $value) {
+                    $this->_headers->add($name, $value);
+                }
             }
             $this->filterHeaders($this->_headers);
         }
@@ -178,7 +179,9 @@ class Request extends \yii\web\Request
         if (($pos = strpos($pathInfo, '?')) !== false) {
             $pathInfo = substr($pathInfo, 0, $pos);
         }
+
         $pathInfo = urldecode($pathInfo);
+
         // try to encode in UTF8 if not so
         // http://w3.org/International/questions/qa-forms-utf-8.html
         if (!preg_match('%^(?:
@@ -195,24 +198,11 @@ class Request extends \yii\web\Request
             $pathInfo = utf8_encode($pathInfo);
         }
 
-        $scriptUrl = $this->getScriptUrl();
-        $baseUrl = $this->getBaseUrl();
-
-        if (strpos($pathInfo, $scriptUrl) === 0) {
-            $pathInfo = substr($pathInfo, strlen($scriptUrl));
-        } elseif ($baseUrl === '' || strpos($pathInfo, $baseUrl) === 0) {
-            $pathInfo = substr($pathInfo, strlen($baseUrl));
-        } elseif (isset($this->getServerParams()['PHP_SELF']) && strpos($this->getServerParams()['PHP_SELF'], $scriptUrl) === 0) {
-            $pathInfo = substr($this->getServerParams()['PHP_SELF'], strlen($scriptUrl));
-        } else {
-            throw new InvalidConfigException('Unable to determine the path info of the current request.');
-        }
-
         if (strncmp($pathInfo, '/', 1) === 0) {
             $pathInfo = substr($pathInfo, 1);
         }
 
-        return (string) $pathInfo;
+        return (string)$pathInfo;
     }
 
     /**
@@ -220,7 +210,18 @@ class Request extends \yii\web\Request
      */
     protected function resolveRequestUri()
     {
-        $this->request->getUri()->getPath();
+        $uri = $this->request->getUri();
+        $requestUri =  $uri->getPath();
+        $queryString = $this->getQueryString();
+        if ($queryString !== '') {
+            $requestUri .= '?' . $this->getQueryString();
+        }
+
+        if ($uri->getFragment() !== '') {
+            $requestUri .= '#' . $uri->getFragment();
+        }
+
+        return $requestUri;
     }
 
     /**
@@ -228,7 +229,7 @@ class Request extends \yii\web\Request
      */
     public function getQueryString()
     {
-        return $this->request->getQuery();
+        return $this->request->getUri()->getQuery();
     }
 
     /**

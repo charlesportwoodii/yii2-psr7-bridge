@@ -28,7 +28,7 @@ return [
                 [
                     'class' => \samdark\log\PsrTarget::class,
                     'logger' => $logger,
-                    'levels' => ['info', 'debug', 'trace', 'warning', 'error'],
+                    'levels' => ['info', 'warning', 'error'],
                     'logVars' => []
                 ],
             ],

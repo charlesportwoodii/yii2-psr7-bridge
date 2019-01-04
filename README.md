@@ -144,21 +144,24 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 
 - File streams currently don't work (eg `yii\web\Response::sendFile`, `yii\web\Response::sendContentAsFile`, `yii\web\Response::sendStreamAsFile`)
 - Performance isn't optimal as the `Application` component is manually reloaded each time.
-- PHP wasn't originally designed for endless PSR7 looks. Expect memory leaks. RoadRunner or other task runners can help manage this.
+- PHP wasn't originally designed for endless PSR7 loops. Expect memory leaks. RoadRunner or other task runners can help manage this.
 
 ## Current Status
 
 - [x] Implement custom `Application component.
 - [x] Convert a PSR7 Request into `yii\web\Request` object.
 - [x] Return a simple response.
+- [x] Routing.
 - [x] Handle `yii\web\Response::$format`.
 - [x] Work with standard Yii2 formatters.
 - [x] Handle `HeaderCollection`.
 - [x] Handle `CookieCollection`.
 - [x] Handle `yii\web\Response::$stream` and `yii\web\Response::$content`.
 - [ ] Implement comparable `sendFile`.
-- [ ] Implement `yii\web\Response::redirect`.
-- [ ] Implement `yii\web\Response::refresh`.
+- [x] Implement `yii\web\Response::redirect`.
+- [x] Implement `yii\web\Response::refresh`.
+- [x] GET query parameters `yii\web\Request::get()`.
+- [ ] POST parameters `yii\web\Request::post()`.
 - [ ] Probably more things I haven't tested yet.
 - [ ] Test Coverage
 
