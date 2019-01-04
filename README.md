@@ -144,7 +144,8 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 
 - File streams currently don't work (eg `yii\web\Response::sendFile`, `yii\web\Response::sendContentAsFile`, `yii\web\Response::sendStreamAsFile`)
 - Performance isn't optimal as the `Application` component is manually reloaded each time.
-- PHP wasn't originally designed for endless PSR7 loops. Expect memory leaks. RoadRunner or other task runners can help manage this.
+- Yii2 leaks memory. Your PSR7 task runner should automatically restart workers that crash, so memory consumption shouldn't balloon on the server. Expect worker crashes.
+- Yii2's ExitHandler or ErrorHandler doesn't _explicitly_ close connections at the end of the script or on a crash. For the time being, you are expected to handle these yourself to prevent connection leaks.
 
 ## Current Status
 
@@ -166,8 +167,10 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [ ] `yii\web\Request::getAuthCredentials()`.
 - [ ] `yii\web\Request::loadCookies()`.
 - [ ] Probably more things I haven't tested yet.
+- [ ] Fix fatal memory leak that occurs every 500 requests.
+- [x] Get `yii-app-basic` to work.
 - [ ] Test Coverage
-
+q
 -----
 
 This project is licensed under the BSD-3-Clause license. See [LICENSE](LICENSE) for more details.
