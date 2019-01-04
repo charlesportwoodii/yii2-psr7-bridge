@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+ini_set('display_errors', 'stderr');
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$relay = new Spiral\Goridge\StreamRelay(STDIN, STDOUT);
+$psr7 = new Spiral\RoadRunner\PSR7Client(new Spiral\RoadRunner\Worker($relay));
+
+defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('YII_ENV') or define('YII_ENV', 'dev');
+
+$config = require_once __DIR__ . '/bootstrap.php';
+
+while ($request = $psr7->acceptRequest()) {
+    try {
+        $application = (new \yii\Psr7\web\Application($config, $request));
+        $psr7->respond($application->handlePsr7Request());
+    } catch (\Throwable $e) {
+        $psr7->getWorker()->error((string)$e);
+    }
+}

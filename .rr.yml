@@ -1,0 +1,10 @@
+rpc:
+  enable: true
+
+http:
+  address: 0.0.0.0:8080
+  workers:
+    command: "./tests/roadrunner"
+    pool:
+      numWorkers: 1
+      maxJobs: 1
