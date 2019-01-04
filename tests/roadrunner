@@ -16,6 +16,8 @@ while ($request = $psr7->acceptRequest()) {
     try {
         $application = (new \yii\Psr7\web\Application($config, $request));
         $psr7->respond($application->handlePsr7Request());
+        unset($application);
+        gc_collect_cycles();
     } catch (\Throwable $e) {
         $psr7->getWorker()->error((string)$e);
     }
