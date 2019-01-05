@@ -32,14 +32,19 @@ class Application extends \yii\web\Application
      */
     public function handlePsr7Request() : ResponseInterface
     {
-        $response = $this->handleRequest($this->get('request'));
+        $response = $this->handleRequest($this->getRequest());
         return $response->getPsr7Response();
     }
 
+    /**
+     * Returns the request object
+     *
+     * @return yii\web\Request
+     */
     public function getRequest()
     {
         if ($this->_request === null) {
-            $this->_request = $this->get('request');
+            $this->_request = parent::getRequest();
         }
 
         return $this->_request;

@@ -136,6 +136,8 @@ This package provides three classes within the `yii\Psr7\web` namespace, `Applic
 
 To handle inbound requests, the `yii\Psr7\web\Application` component acts as a stand in replacement for `yii\web\Application` for use in your task runner. It's constructor takes the standard Yii2 configuration array, and a additional `ServerRequestInterface` instance. The `Application` component then instantiates a `yii\Psr7\web\Request` object using the `ServerRequestInterface` provided.
 
+> Since `yii\web\Application::bootstrap` uses the `request` component, the request component needs to be properly constructed during the application constructor, as opposed to simply calling `$app->handleRequest($psr7Request);`
+
 `yii\Psr7\web\Request` is a stand-in replacement for `yii\web\Request`. It's only purpose is to provide a interface between `ServerRequestInterface` and the standard `yii\web\Request` API.
 
 Within your modules, controllers, actions, `Yii::$app->request` and `Yii::$app->response` may be used normally without any changes.
