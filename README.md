@@ -122,6 +122,8 @@ While PHP has had incrimental speed improvements from 7.0 (phpng), the performan
 
 PSR7 servers enable us to keep almost all of our classes and code in memory between requests, which mostly eliminates the biggest performance bottleneck.
 
+Be sure to check out the [Performance Comparisons](https://github.com/charlesportwoodii/yii2-psr7-bridge/wiki/Performance-Comparisons) wiki page for more information on the actual performance impact on the yii2-app-basic app.
+
 #### PSR-7 and PSR-15 Compatability
 
 While not strictly the goal of this project, it's becomming more and more difficult to ignore PSR-7 and PSR-15 middlewares. As the Yii2 team has punted PSR-7 compatability to Yii 2.1 or Yii 3, existing Yii2 projects cannot take advantage of a standardized request/response pattern, or chained middlewares.

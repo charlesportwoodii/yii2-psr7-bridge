@@ -7,4 +7,4 @@ http:
     command: "./../roadrunner"
     pool:
       numWorkers: 1
-      #maxJobs: 1
+      maxJobs: 1
