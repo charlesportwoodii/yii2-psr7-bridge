@@ -7,8 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class Application extends \yii\web\Application
 {
-    private $_request;
-
     /**
      * Overloaded constructor
      *
@@ -34,19 +32,5 @@ class Application extends \yii\web\Application
     {
         $response = $this->handleRequest($this->getRequest());
         return $response->getPsr7Response();
-    }
-
-    /**
-     * Returns the request object
-     *
-     * @return yii\web\Request
-     */
-    public function getRequest()
-    {
-        if ($this->_request === null) {
-            $this->_request = parent::getRequest();
-        }
-
-        return $this->_request;
     }
 }
