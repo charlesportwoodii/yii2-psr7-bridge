@@ -18,6 +18,7 @@ class Application extends \yii\web\Application
         if ($request === null) {
             throw new Exception('`Request` must be an instance of `ServerRequestInterface`');
         }
+
         $config['components']['request']['request'] = $request;
 
         parent::__construct($config);

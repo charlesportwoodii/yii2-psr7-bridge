@@ -168,8 +168,8 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] GET query parameters `yii\web\Request::get()`.
 - [x] POST parameters `yii\web\Request::post()`.
 - [ ] `yii\web\Request::$methodParam` support.
-- [ ] `yii\web\Request::getAuthCredentials()`.
-- [ ] `yii\web\Request::loadCookies()`.
+- [x] `yii\web\Request::getAuthCredentials()`.
+- [x] `yii\web\Request::loadCookies()`.
 - [ ] Probably more things I haven't tested yet.
 - [ ] Fix fatal memory leak that occurs every 500 requests.
 - [x] Get `yii-app-basic` to work.

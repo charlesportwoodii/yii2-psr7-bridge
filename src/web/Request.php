@@ -324,10 +324,63 @@ class Request extends \yii\web\Request
     /**
      * @inheritdoc
      */
-    public function getAuthCredentials() {}
+    public function getAuthCredentials()
+    {
+        // Go net/http transforms the UserInfo URL component to a Authorization: Basic header
+        // If this header is present, automatically decode it and treat it as the UserInfo component
+        $headers = $this->getHeaders();
+        if ($headers->has('authorization')) {
+            $authHeader = $headers->get('authorization');
+            if (\substr($authHeader, 0, 6) === 'Basic ') {
+                $credentials = \base64_decode(\str_replace('Basic ', '', $authHeader));
+                return \explode(':', $credentials);
+            }
+        }
+
+        return [null, null];
+    }
 
     /**
      * @inheritdoc
      */
-    protected function loadCookies() {}
+    protected function loadCookies()
+    {
+        $cookies = [];
+        if ($this->enableCookieValidation) {
+            if ($this->cookieValidationKey == '') {
+                throw new InvalidConfigException(get_class($this) . '::cookieValidationKey must be configured with a secret key.');
+            }
+
+            foreach ($this->request->getCookieParam() as $name => $value) {
+                if (!is_string($value)) {
+                    continue;
+                }
+
+                $data = Yii::$app->getSecurity()->validateData($value, $this->cookieValidationKey);
+                if ($data === false) {
+                    continue;
+                }
+
+                $data = @unserialize($data);
+                if (is_array($data) && isset($data[0], $data[1]) && $data[0] === $name) {
+                    $cookies[$name] = Yii::createObject([
+                        'class' => 'yii\web\Cookie',
+                        'name' => $name,
+                        'value' => $data[1],
+                        'expire' => null,
+                    ]);
+                }
+            }
+        } else {
+            foreach ($this->request->getCookieParams() as $name => $value) {
+                $cookies[$name] = Yii::createObject([
+                    'class' => 'yii\web\Cookie',
+                    'name' => $name,
+                    'value' => $value,
+                    'expire' => null,
+                ]);
+            }
+        }
+        return $cookies;
+    }
 }

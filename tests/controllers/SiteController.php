@@ -2,6 +2,7 @@
 
 namespace yii\Psr7\tests\controllers;
 
+use yii\filters\auth\HttpBasicAuth;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\Cookie;
@@ -57,6 +58,22 @@ class SiteController extends Controller
             'name' => 'test2',
             'value' => 'test2'
         ]));
-        return;
+    }
+
+    public function actionGetcookies()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        return Yii::$app->request->getCookies();
+    }
+
+    public function actionAuth()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        return [
+            'username' => Yii::$app->request->getAuthUser(),
+            'password' => Yii::$app->request->getAuthPassword()
+        ];
     }
 }
