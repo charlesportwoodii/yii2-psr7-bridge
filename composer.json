@@ -13,7 +13,7 @@
     "require": {
         "yiisoft/yii2": "^2.0.15",
         "psr/http-message": "^1.0",
-        "zendframework/zend-diactoros": "^1.8"
+        "zendframework/zend-diactoros": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0.2",
