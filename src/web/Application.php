@@ -37,6 +37,9 @@ class Application extends \yii\web\Application
         } catch (\Exception $e) {
             $response = $this->getErrorHandler()->handleException($e);
             return $response->getPsr7Response();
+        } catch (\Throwable $e) {
+            $response = $this->getErrorHandler()->handleException($e);
+            return $response->getPsr7Response();
         }
     }
 

@@ -17,11 +17,7 @@ use yii\Psr7\web\Response;
 class ErrorHandler extends \yii\web\ErrorHandler
 {
     /**
-     * Handles uncaught PHP exceptions.
-     *
-     * This method is implemented as a PHP exception handler.
-     *
-     * @param \Exception $exception the exception that is not caught
+     * @inheritdoc
      */
     public function handleException($exception)
     {
@@ -48,9 +44,6 @@ class ErrorHandler extends \yii\web\ErrorHandler
             $response = $this->renderException($exception);
             if (!YII_ENV_TEST) {
                 \Yii::getLogger()->flush(true);
-                if (defined('HHVM_VERSION')) {
-                    flush();
-                }
                 return $response;
             }
         } catch (\Exception $e) {
@@ -65,8 +58,33 @@ class ErrorHandler extends \yii\web\ErrorHandler
     }
 
     /**
-     * Renders the exception.
-     * @param \Exception|\Error $exception the exception to be rendered.
+     * @inheritdoc
+     */
+    protected function handleFallbackExceptionMessage($exception, $previousException)
+    {
+        $response = new Response;
+        $msg = "An Error occurred while handling another error:\n";
+        $msg .= (string) $exception;
+        $msg .= "\nPrevious exception:\n";
+        $msg .= (string) $previousException;
+        $response->data = $msg;
+        if (YII_DEBUG) {
+            if (PHP_SAPI === 'cli') {
+                $response->data = $msg;
+            } else {
+                $response->data = '<pre>' . htmlspecialchars($msg, ENT_QUOTES, Yii::$app->charset) . '</pre>';
+            }
+        } else {
+            $response->data = 'An internal server error occurred.';
+        }
+        $response->data .= "\n\$_SERVER = " . VarDumper::export($_SERVER);
+        error_log($response->data);
+
+        return $response;
+    }
+
+    /**
+     * @inheritdoc
      */
     protected function renderException($exception)
     {
