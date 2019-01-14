@@ -1,6 +1,6 @@
-# Yii2 PSR7 Bridge
+# Yii2 PSR-7 Bridge
 
-A PSR7 bridge for Yii2 web applications.
+A PSR-7 bridge and PSR-16 adapter for Yii2 web applications.
 
 The usecase for this bridge is to enable Yii2 to be utilized with PSR-7 and PSR-15 middlewars and task runners such as RoadRunner and PHP-PM, with _minimal_ code changes to your application (eg requiring no changes to any calls to `Yii::$app->request` and `Yii::$app->response` within your application).
 
@@ -34,21 +34,7 @@ Tests can be run with `phpunit`.
 
 Due to the nature of this package, several changes are needed to your application.
 
-1. In you `web/index.php` file, reconfigure your `Application` component as follows:
-
-Replace your `Application` bootstrap code:
-
-```php
-(new yii\web\Application($config))->run();
-```
-
-with the following `Application` component.
-
-```php
-(new yii\Psr7\web\Application($config, $psr7Request))->handlePsr7Request();
-```
-
-2. Modify your `request` and `response` components within your web application config to be instance of `yii\Psr7\web\Request` and `yii\Psr7\web\Response`, respectively:
+1. Modify your `request` and `response` components within your web application config to be instance of `yii\Psr7\web\Request` and `yii\Psr7\web\Response`, respectively:
 
 ```php
 return [
@@ -56,7 +42,6 @@ return [
     'components' => [
         'request' => [
             'class' => \yii\Psr7\web\Request::class,
-            'request' => null
         ],
         'response' => [
             'class' => \yii\Psr7\web\Response::class
@@ -66,7 +51,7 @@ return [
 ];
 ```
 
-3. Run your application with a PSR7 loader.
+2. Run your application with a PSR-15 compatible dispatcher
 
 For example, to Go/Roadrunner, you can use the component as follows:
 
@@ -95,14 +80,37 @@ $config = require_once __DIR__ . '/config/config.php';
 // Loop
 while ($request = $psr7->acceptRequest()) {
     try {
-        // Create a new instance of the application
-        $application = (new \yii\Psr7\web\Application($config, $request));
+        // A simple PSR-7 approach
+        $application = (new \yii\Psr7\web\Application($config));
+        $response = $application->handle($request);
 
-        $response = $application->handlePsr7Request();
+        $psr7->respond($response);
 
-        // Do any other middleware work here
+        /**
+         * Since `yii\Psr7\web\Application` is PSR-15 compatible,
+         * you can also use any PSR-15 dispatcher.
+         */
 
-        // Send a PSR7 response back to go/roadrunner
+        /**
+         * With \Middleware\Utils\Dispatcher: https://github.com/middlewares/utils
+         *
+         * $response = \Middlewares\Utils\Dispatcher::run([
+         *   // Handle any preflight middlewares
+         *   // Handle the application lastly
+         *   function($request, $next) use ($application) {
+         *       return $application->handle($request);
+         *   }
+         * ], $request);
+         */
+
+        /**
+         * Other PSR-15 loaders can be used as well.
+         *
+         * $response = \Ajgarlag\Psr15\Dispatcher\Pipe::create([
+         *    // Handle other middlewares
+         * ])->process($request, $application);
+         */
+
         $psr7->respond($response);
     } catch (\Throwable $e) {
         // Handle any errors sent from upstream. Ideally with Yii2, you should catch any errors before
