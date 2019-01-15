@@ -259,7 +259,7 @@ public function behaviors()
 }
 ```
 
-Middlewares are executed in sequential order until either all middlewares are processed, or if the middleware returns a response (such as an HTTP redirect response).
+Middlewares are processed sequentially either until a response is returned (such as an HTTP redirect) or all middlewares have been processed.
 
 If a response is returned by any middleware executed, the before action filter will return false, and the resulting response will be sent to the client.
 
