@@ -146,6 +146,43 @@ $response = \Ajgarlag\Psr15\Dispatcher\Pipe::create([
 $psr7->respond($response);
 ```
 
+### PSR-15 Middleware Filters
+
+This package also provides the capabilities to process PSR-15 compatible middlewares on a per route basis via `yii\base\ActionFilter` extension.
+
+#### Authentication
+
+If your application requires a PSR-15 authentication middleware _not_ provided by an existing `yii\filters\auth\AuthInterface` class, you can use `yii\Psr7\filters\auth\MiddlewareAuth` to process your PSR-15 authentication middleware.
+
+`\yii\Psr7\filters\auth\MiddlewareAuth` will run the authentication middleware. If a response is returned by your middleware it will send that response. Otherwise, it will look for the `attribute` specified by your authentication middleware, and run `yii\web\User::loginByAccessToken()` with the value stored in that attribute.
+
+```php
+return [[
+    'class' => \yii\Psr7\filters\auth\MiddlewareAuth::class,
+    'attribute' => 'attribute_with_user_identifier_populated_by_middleware',
+    'middleware' => new AuthenticationMiddleware
+]]
+```
+
+A trivial example with `middlewares/http-authentication` is shown as follows using the `username` attribute populated by `Middlewares\BasicAuthentication`.
+
+```php
+public function behaviors()
+{
+    return \array_merge(parent::behaviors(), [
+        [
+            'class' => \yii\Psr7\filters\auth\MiddlewareAuth::class,
+            'attribute' => 'username',
+            'middleware' => (new \Middlewares\BasicAuthentication([
+                'username1' => 'password1',
+                'username2' => 'password2'
+            ]))->attribute('username')
+        ]
+    ];
+}
+```
+#### Other Middlewares
+
 ## Why does this package exist?
 
 #### Performance

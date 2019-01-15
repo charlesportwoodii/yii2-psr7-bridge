@@ -4,9 +4,27 @@ namespace yii\Psr7\web\traits;
 
 use Yii;
 use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Response;
 
 trait Psr7ResponseTrait
 {
+    /**
+     * Populates this response with a PSR7 Response Interface
+     *
+     * @param ResponseInterface $response
+     * @return self
+     */
+    public function withPsr7Response(ResponseInterface $response)
+    {
+        $this->setStatusCode($response->getStatusCode());
+        $this->content = (string)$response->getBody();
+        foreach ($response->getHeaders() as $name => $value) {
+            $this->headers->add($name, $value);
+        }
+
+        return $this;
+    }
+
     /**
      * Returns a PSR7 response
      *
@@ -19,7 +37,7 @@ trait Psr7ResponseTrait
         $this->trigger(self::EVENT_AFTER_PREPARE);
         $stream = $this->getPsr7Content();
 
-        $response = new \Zend\Diactoros\Response(
+        $response = new Response(
             $stream,
             $this->getStatusCode(),
             $this->getPsr7Headers()
