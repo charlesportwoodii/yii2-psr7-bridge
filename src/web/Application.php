@@ -9,11 +9,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+use yii\base\Component;
 use Yii;
 
 /**
  * A Yii2 compatible A PSR-15 RequestHandlerInterface Application component
- * 
+ *
  * This class is a \yii\web\Application substitute for use with PSR-7 and PSR-15 middlewares
  */
 class Application extends \yii\base\Application implements RequestHandlerInterface
@@ -49,6 +50,38 @@ class Application extends \yii\base\Application implements RequestHandlerInterfa
     public $controller;
 
     /**
+     * @var array The configuration
+     */
+    private $config;
+
+    /**
+     * Overloaded constructor to persist configuration
+     *
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->config = $config;
+        parent::__construct($config);
+    }
+
+    /**
+     * Re-registers all components with the original configuration
+     * @return void
+     */
+    public function reset()
+    {
+        Yii::$app = $this;
+        static::setInstance($this);
+        $config = $this->config;
+
+        $this->state = self::STATE_BEGIN;
+        $this->preInit($config);
+        $this->registerErrorHandler($config);
+        Component::__construct($config);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function bootstrap()
@@ -68,17 +101,41 @@ class Application extends \yii\base\Application implements RequestHandlerInterfa
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         try {
+            $this->state = self::STATE_BEFORE_REQUEST;
+            $this->trigger(self::EVENT_BEFORE_REQUEST);
+
+            $this->state = self::STATE_HANDLING_REQUEST;
             $yiiRequest = $this->getRequest();
             $yiiRequest->setPsr7Request($request);
+
             $response = $this->handleRequest($yiiRequest);
+
+            $this->state = self::STATE_AFTER_REQUEST;
+            $this->trigger(self::EVENT_AFTER_REQUEST);
+
+            $this->state = self::STATE_END;
             return $response->getPsr7Response();
         } catch (\Exception $e) {
-            $response = $this->getErrorHandler()->handleException($e);
-            return $response->getPsr7Response();
+            return $this->handleError($e);
         } catch (\Throwable $e) {
-            $response = $this->getErrorHandler()->handleException($e);
-            return $response->getPsr7Response();
+            return $this->handleError($e);
         }
+    }
+
+    /**
+     * Handles exceptions and errors thrown by the request handler
+     *
+     * @param \Throwable|\Exception $exception
+     * @return ResponseInterface
+     */
+    private function handleError(\Throwable $exception) : ResponseInterface
+    {
+        $response = $this->getErrorHandler()->handleException($e);
+
+        $this->trigger(self::EVENT_AFTER_REQUEST);
+        $this->state = self::STATE_END;
+
+        return $response->getPsr7Response();
     }
 
     /**

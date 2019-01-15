@@ -77,11 +77,12 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 // Load your configuration file
 $config = require_once __DIR__ . '/config/config.php';
 
+$application = (new \yii\Psr7\web\Application($config));
+
 // Loop
 while ($request = $psr7->acceptRequest()) {
     try {
         // A simple PSR-7 approach
-        $application = (new \yii\Psr7\web\Application($config));
         $response = $application->handle($request);
 
         $psr7->respond($response);
@@ -178,12 +179,12 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [ ] `yii\web\Request::$methodParam` support.
 - [x] `yii\web\Request::getAuthCredentials()`.
 - [x] `yii\web\Request::loadCookies()`.
-- [ ] `yii\web\ErrorHandler` implementation (partial)
-- [ ] Probably more things I haven't tested yet.
-- [ ] Fix fatal memory leak that occurs every 500 requests.
+- [ ] `yii\web\ErrorHandler` implementation (partial).
+- [ ] Reuse `Application` component instead of re-instantiating in each loop.
+- [ ] Fix fatal memory leak under load
 - [x] Get `yii-app-basic` to work.
 - [ ] Test Coverage
-q
+
 -----
 
 This project is licensed under the BSD-3-Clause license. See [LICENSE](LICENSE) for more details.
