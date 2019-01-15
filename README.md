@@ -273,15 +273,17 @@ The performance benefits of task runners such as RoadRunner and PHP-PM are extre
 
 While PHP has had incrimental speed improvements from 7.0 (phpng), the performance of web based PHP applications is limited by the need to rebootstrap _every single file_ with each HTTP request. While Nginx + PHP-FPM is fast, even with opcache every file has to read back into memory on each HTTP request.
 
-PSR7 servers enable us to keep almost all of our classes and code in memory between requests, which mostly eliminates the biggest performance bottleneck.
+PSR-7 servers enable us to keep almost all of our classes and code in memory between requests, which mostly eliminates the biggest performance bottleneck.
 
 Be sure to check out the [Performance Comparisons](https://github.com/charlesportwoodii/yii2-psr7-bridge/wiki/Performance-Comparisons) wiki page for more information on the actual performance impact on the yii2-app-basic app.
 
+It is expected that [PHP 7.4 preloading](https://wiki.php.net/rfc/preload) would improve performance further.
+
 #### PSR-7 and PSR-15 Compatability
 
-While not strictly the goal of this project, it's becomming more and more difficult to ignore PSR-7 and PSR-15 middlewares. As the Yii2 team has punted PSR-7 compatability to Yii 2.1 or Yii 3, existing Yii2 projects cannot take advantage of a standardized request/response pattern, or chained middlewares.
+While not strictly the goal of this project, it's becomming more and more difficult to ignore PSR-7 and PSR-15 middlewares. As the Yii2 team has punted PSR-7 compatability to Yii 2.1 or Yii 3, existing Yii2 projects cannot take advantage of a standardized request/response pattern or chained middlewares.
 
-From a code/time standpoint, that means you any PSR-15 middleware you want to play with needs to be adapted custom to Yii2, which is an ineffecient use of developers time, which runs contract to the `fast, secure, effecient` mantra Yii has.
+Developers conforming to PSR-7 and PSR-15 consequently need to re-implement custom middlewares for Yii2, which runs contrary to the `fast, secure, effecient` mantra of Yii2. This library helps to alleviate some of that pain.
 
 ## How this works
 
