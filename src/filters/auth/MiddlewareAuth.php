@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-use yii\base\Action;
 use yii\filters\auth\AuthMethod;
 use yii\filters\auth\AuthInterface;
 
@@ -27,7 +26,7 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
      *
      * @var integer
      */
-    private $continueStatusCode = 103;
+    private $continueStatusCode = 109;
 
     /**
      * The PSR-15 middleware to run
@@ -44,6 +43,23 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
     public $attribute;
 
     /**
+     * The modified request interface
+     *
+     * @var ServerRequestInterface $request
+     */
+    private $request;
+
+    /**
+     * Returns the modified request
+     *
+     * @return ServerRequestInterface
+     */
+    protected function getModifiedRequest() : ServerRequestInterface
+    {
+        return $this->request;
+    }
+
+    /**
      * Authenticates a user
      *
      * @param User $user
@@ -54,14 +70,20 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
     public function authenticate($user, $request, $response)
     {
         if ($this->attribute === null) {
-            Yii::error("Token attribute not set.", 'yii\Psr7\filters\auth\MiddlewareAuth');
+            Yii::error('Token attribute not set.', 'yii\Psr7\filters\auth\MiddlewareAuth');
             $response->setStatusCode(500);
             $response->content = 'An unexpected error occurred.';
             $this->handleFailure($response);
         }
 
         // Process the PSR-15 middleware
-        $process = $this->middleware->process($request->getPsr7Request(), $this);
+        $instance = $this;
+        $process = $this->middleware->process(Yii::$app->request->getPsr7Request(), $instance);
+
+        // Update the PSR-7 Request object
+        Yii::$app->request->setPsr7Request(
+            $instance->getModifiedRequest()
+        );
 
         // If we get a continue status code and the expected user attribute is set
         // attempt to log this user in use yii\web\User::loginByAccessToken
@@ -79,6 +101,7 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
 
         // Populate the response object
         $response->withPsr7Response($process);
+        unset($process);
         return null;
     }
 
