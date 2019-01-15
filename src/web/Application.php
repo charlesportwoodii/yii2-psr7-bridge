@@ -130,7 +130,7 @@ class Application extends \yii\base\Application implements RequestHandlerInterfa
      */
     private function handleError(\Throwable $exception) : ResponseInterface
     {
-        $response = $this->getErrorHandler()->handleException($e);
+        $response = $this->getErrorHandler()->handleException($exception);
 
         $this->trigger(self::EVENT_AFTER_REQUEST);
         $this->state = self::STATE_END;

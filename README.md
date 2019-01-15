@@ -51,7 +51,16 @@ return [
 ];
 ```
 
-2. Run your application with a PSR-15 compatible dispatcher
+2. Set the following environment variables to your task runner. With RoadRunner, your configuration might look as follows:
+
+```yaml
+env:
+  YII_ALIAS_WEBROOT: /path/to/webroot
+```
+
+> Note that all 3 environment variables listed _must_ be defined.
+
+3. Run your application with a PSR-15 compatible dispatcher
 
 For example, to Go/Roadrunner, you can use the component as follows:
 
@@ -60,65 +69,81 @@ For example, to Go/Roadrunner, you can use the component as follows:
 <?php
 
 ini_set('display_errors', 'stderr');
-// Load your standard component vendors
-require_once __DIR__ . '/../vendor/autoload.php';
-
-// You MUST load the Yii class manually since Yii2 has a custom autoloader
-require_once __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
-
-// Roadrunner relay and PSR7 object
-$relay = new Spiral\Goridge\StreamRelay(STDIN, STDOUT);
-$psr7 = new Spiral\RoadRunner\PSR7Client(new Spiral\RoadRunner\Worker($relay));
-
 // Set your normal YII_ definitions
 defined('YII_DEBUG') or define('YII_DEBUG', true);
+// Alternatives set this in your rr.yaml file
+//defined('YII_DEBUG') or define('YII_DEBUG', \getenv('YII_DEBUG'));
+
 defined('YII_ENV') or define('YII_ENV', 'dev');
+// Alternatives set this in your rr.yaml file
+//defined('YII_ENV') or define('YII_ENV', \getenv('YII_ENV'));
+
+// Load your vendor dependencies and Yii2 autoloader
+require_once '/path/to/vendor/autoload.php';
+require_once '/path/to/vendor/yiisoft/yii2/Yii.php';
+
+// Roadrunner relay and PSR7 object
+$relay = new \Spiral\Goridge\StreamRelay(STDIN, STDOUT);
+$psr7 = new \Spiral\RoadRunner\PSR7Client(new \Spiral\RoadRunner\Worker($relay));
 
 // Load your configuration file
-$config = require_once __DIR__ . '/config/config.php';
+$config = require_once '/path/to/config/config.php';
 
 $application = (new \yii\Psr7\web\Application($config));
 
-// Loop
+// Handle each request in a loop
 while ($request = $psr7->acceptRequest()) {
     try {
-        // A simple PSR-7 approach
         $response = $application->handle($request);
-
-        $psr7->respond($response);
-
-        /**
-         * Since `yii\Psr7\web\Application` is PSR-15 compatible,
-         * you can also use any PSR-15 dispatcher.
-         */
-
-        /**
-         * With \Middleware\Utils\Dispatcher: https://github.com/middlewares/utils
-         *
-         * $response = \Middlewares\Utils\Dispatcher::run([
-         *   // Handle any preflight middlewares
-         *   // Handle the application lastly
-         *   function($request, $next) use ($application) {
-         *       return $application->handle($request);
-         *   }
-         * ], $request);
-         */
-
-        /**
-         * Other PSR-15 loaders can be used as well.
-         *
-         * $response = \Ajgarlag\Psr15\Dispatcher\Pipe::create([
-         *    // Handle other middlewares
-         * ])->process($request, $application);
-         */
-
         $psr7->respond($response);
     } catch (\Throwable $e) {
-        // Handle any errors sent from upstream. Ideally with Yii2, you should catch any errors before
-        // Your application gets to this point via ErrorHandler
+        // \yii\Psr7\web\ErrorHandler should handle any exceptions
+        // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
 }
+```
+
+### PSR-7 and PSR-15 compatability
+
+`\yii\Psr7\web\Application` implements PSR-15's `\Psr\Http\Server\RequestHandlerInterface` providing full PSR-15 compatability.
+
+#### PSR-7
+
+If your application doesn't require PSR-15 middlewares, you can simply return a PSR-7 response from the application as follows:
+
+```php
+$response = $application->handle($request);
+$psr7->respond($response);
+```
+
+#### PSR-15 with middlewares/utils package
+
+Since `\yii\Psr7\web\Application` is PSR-15 middleware compatible, you can also use it with any PSR-15 dispatcher.
+
+In your test script you can utilize `middlewares/utils`.
+
+```php
+$response = \Middlewares\Utils\Dispatcher::run([
+    // new Middleware,
+    // new NextMiddleware, // and so forth...
+    function($request, $next) use ($application) {
+        return $application->handle($request);
+    }
+], $request);
+$psr7->respond($response);
+```
+
+#### PSR-15 with ajgarlag/psr15-dispatcher
+
+Another example with `ajgarlag/psr15-dispatcher` package as the dispatcher.
+
+```php
+$response = \Ajgarlag\Psr15\Dispatcher\Pipe::create([
+    // new Middleware,
+    // new NextMiddleware, // and so forth...
+])->process($request, $application);
+$psr7->respond($response);
 ```
 
 ## Why does this package exist?

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace yii\Psr7\web;
 
@@ -69,6 +69,16 @@ class Request extends \yii\web\Request
     public function setPsr7Request(ServerRequestInterface $request)
     {
         $this->_psr7 = $request;
+    }
+
+    /**
+     * Returns the PSR7 request
+     *
+     * @return ServerRequestInterface|null
+     */
+    public function getPsr7Request() :? ServerRequestInterface
+    {
+        return $this->_psr7;
     }
 
     /**

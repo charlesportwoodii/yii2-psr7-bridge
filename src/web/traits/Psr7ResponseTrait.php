@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 
 trait Psr7ResponseTrait
 {
-
     /**
      * Returns a PSR7 response
      *
@@ -55,7 +54,12 @@ trait Psr7ResponseTrait
         return \array_merge($headers, $this->getPsr7Cookies());
     }
 
-    private function getPsr7Cookies()
+    /**
+     * Convers the PSR-7 header cookies to raw headers
+     *
+     * @return array
+     */
+    private function getPsr7Cookies() : array
     {
         $cookies = [];
         $request = Yii::$app->getRequest();
