@@ -1,6 +1,6 @@
 # Yii2 PSR-7 Bridge
 
-A PSR-7 bridge and PSR-16 adapter for Yii2 web applications.
+A PSR-7 bridge and PSR-15 adapter for Yii2 web applications.
 
 The usecase for this bridge is to enable Yii2 to be utilized with PSR-7 and PSR-15 middlewars and task runners such as RoadRunner and PHP-PM, with _minimal_ code changes to your application (eg requiring no changes to any calls to `Yii::$app->request` and `Yii::$app->response` within your application).
 
