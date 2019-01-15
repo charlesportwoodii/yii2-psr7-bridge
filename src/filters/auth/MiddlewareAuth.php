@@ -78,7 +78,8 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
         }
 
         // Populate the response object
-        $this->handleFailure($response->withPsr7Response($process));
+        $response->withPsr7Response($process);
+        return null;
     }
 
     /**

@@ -181,6 +181,9 @@ public function behaviors()
     ];
 }
 ```
+
+> Note: This class should be compatible with `yii\filters\auth\CompositeAuth` as it returns `null`. Note however that the `yii\web\Response` object _will_ be populated should an HTTP status code or message be returned. If you require custom responses you should extend this class or manually trigger `handleFailure()`.
+
 #### Other Middlewares
 
 ## Why does this package exist?
