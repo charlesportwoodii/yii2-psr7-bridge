@@ -115,7 +115,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    protected function terminate(ResponseInterface $response) : ResponseInterface
+    public function terminate(ResponseInterface $response = null) : ResponseInterface
     {
         // Final flush of Yii2's logger to ensure log data is written at the end of the request
         // and to ensure Yii2 Debug populates correctly

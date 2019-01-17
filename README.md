@@ -106,6 +106,9 @@ while ($request = $psr7->acceptRequest()) {
         // \yii\Psr7\web\ErrorHandler should handle any exceptions
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
+        
+        // In the event the application encounters an uncaught error force termination of the app
+        $application->terminate();
     }
 }
 ```
@@ -126,7 +129,7 @@ Normal functionality via `errorAction` is supported. Yii2's standard error and e
 
 ### PSR-7 and PSR-15 compatability
 
-`\yii\Psr7\web\Application` implements PSR-15's `\Psr\Http\Server\RequestHandlerInterface` providing full PSR-15 compatability.
+`\yii\Psr7\web\Application` extends `\yii\web\Application` and implements PSR-15's `\Psr\Http\Server\RequestHandlerInterface` providing full PSR-15 compatability.
 
 #### PSR-7
 
