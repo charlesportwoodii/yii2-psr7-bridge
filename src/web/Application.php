@@ -86,9 +86,8 @@ class Application extends \yii\base\Application implements RequestHandlerInterfa
      */
     protected function bootstrap()
     {
-        $request = $this->getRequest();
         Yii::setAlias('@webroot', \getenv('YII_ALIAS_WEBROOT'));
-        Yii::setAlias('@web', $request->getBaseUrl());
+        Yii::setAlias('@web', \getenv('YII_ALIAS_WEB'));
         parent::bootstrap();
     }
 
