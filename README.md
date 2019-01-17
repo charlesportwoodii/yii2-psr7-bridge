@@ -60,9 +60,10 @@ return [
 ```yaml
 env:
   YII_ALIAS_WEBROOT: /path/to/webroot
+  YII_ALIAS_WEB: '127.0.0.1:8080'
 ```
 
-> This environment variable _must_ be defined.
+> All environment variables _must_ be defined.
 
 3. Run your application with a PSR-15 compatible dispatcher.
 
@@ -331,6 +332,7 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [ ] `yii\web\ErrorHandler` implementation (partial).
 - [ ] Run `yii-app-basic`.
 - [ ] Bootstrap with `yii\log\Target`.
+- [ ] session handling
 - [ ] `yii-debug`
 - [ ] `yii-gii`.
 - [ ] Fix fatal memory leak under load

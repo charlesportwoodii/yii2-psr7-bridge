@@ -61,6 +61,11 @@ class Request extends \yii\web\Request
     private $_scriptUrl;
 
     /**
+     * @inheritdoc
+     */
+    private $_baseUrl;
+
+    /**
      * Sets the PSR-7 Request object
      *
      * @param ServerRequestInterface $request
@@ -223,6 +228,14 @@ class Request extends \yii\web\Request
         }
 
         return $this->_scriptUrl;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBaseUrl()
+    {
+        return Yii::getAlias('@web');
     }
 
     /**
