@@ -107,7 +107,13 @@ while ($request = $psr7->acceptRequest()) {
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
-    gc_collect_cycles();
+    
+    // Workers will steadily grow in memory with each request until PHP memory_limit is reached, resulting in a worker crash.
+    // With RoadRunner, you can tell the worker to shutdown if it approaches 10% of the maximum memory limit, allowing you to achieve better uptime.
+    if ($application->clean()) {
+        $psr7->getWorker()->stop();
+        return;
+    }
 }
 ```
 
@@ -334,7 +340,7 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [ ] session handling
 - [x] `yii-debug`
 - [x] `yii-gii`.
-- [ ] Fix fatal memory leak under load
+- [?] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
 - [ ] Implement comparable `sendFile`.
 - [ ] `yii\web\Request::$methodParam` support.

@@ -26,7 +26,11 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     private $config;
 
-    private $isBootstrapped = false;
+    /**
+     * @var int $memoryLimit
+     */
+    private $memoryLimit;
+
     /**
      * Overloaded constructor to persist configuration
      *
@@ -168,5 +172,48 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
             'user' => ['class' => \yii\web\User::class],
             'errorHandler' => ['class' => \yii\Psr7\web\ErrorHandler::class],
         ]);
+    }
+
+    /**
+     * Cleanup function to be called at the end of the script execution
+     * This will automatically run garbage collection, and if the script
+     * is within 5% of the memory limit will pre-maturely kill the worker
+     * forcing your task-runner to rebuild it.
+     *
+     * This is implemented to avoid requests failing due to memory exhaustion
+     *
+     * @return boolean
+     */
+    public function clean()
+    {
+        gc_collect_cycles();
+        $limit = $this->getMemoryLimit();
+        $bound = $limit * .90;
+        $usage = memory_get_usage(true);
+        if ($usage >= $bound) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Retrieves the current memory as integer bytes
+     *
+     * @return int
+     */
+    private function getMemoryLimit() : int
+    {
+        if (!$this->memoryLimit) {
+            $limit  = ini_get('memory_limit');
+            sscanf ($limit, '%u%c', $number, $suffix);
+            if (isset ($suffix)) {
+                $number = $number * pow (1024, strpos (' KMG', strtoupper($suffix)));
+            }
+
+            $this->memoryLimit = $number;
+        }
+
+        return (int)$this->memoryLimit;
     }
 }
