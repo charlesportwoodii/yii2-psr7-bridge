@@ -106,6 +106,8 @@ while ($request = $psr7->acceptRequest()) {
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
+    // reset the application
+    $application->reset();
 }
 ```
 
@@ -326,9 +328,12 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Per-action Middleware authentication handling.
 - [x] Per-action middleware chains.
 - [x] Reuse `Application` component instead of re-instantiating in each loop.
-- [x] Run `yii-app-basic`.
-- [ ] Fix fatal memory leak under load
 - [ ] `yii\web\ErrorHandler` implementation (partial).
+- [ ] Run `yii-app-basic`.
+- [ ] Bootstrap with `yii\log\Target`.
+- [ ] `yii-debug`
+- [ ] `yii-gii`.
+- [ ] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
 - [ ] Implement comparable `sendFile`.
 - [ ] `yii\web\Request::$methodParam` support.

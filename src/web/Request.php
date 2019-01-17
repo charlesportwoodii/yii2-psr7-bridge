@@ -102,7 +102,7 @@ class Request extends \yii\web\Request
     {
         if ($this->_headers === null) {
             $this->_headers = new HeaderCollection;
-            foreach ($this->_psr7->getHeaders() as $name => $values) {
+            foreach ($this->getPsr7Request()->getHeaders() as $name => $values) {
                 foreach ($values as $value) {
                     $this->_headers->add($name, $value);
                 }
@@ -118,7 +118,7 @@ class Request extends \yii\web\Request
      */
     public function getMethod()
     {
-        return $this->_psr7->getMethod();
+        return $this->getPsr7Request()->getMethod();
     }
 
     /**
@@ -127,7 +127,7 @@ class Request extends \yii\web\Request
     public function getRawBody()
     {
         if ($this->_rawBody === null) {
-            $request = clone $this->_psr7;
+            $request = clone $this->getPsr7Request();
             $body = $request->getBody();
             $body->rewind();
             $this->setRawBody((string)$body->getContents());
@@ -173,7 +173,7 @@ class Request extends \yii\web\Request
                 $this->_bodyParams = $parser->parse($this->getRawBody(), $rawContentType);
             } elseif ($this->getMethod() === 'POST') {
                 // PHP has already parsed the body so we have all params in $_POST
-                $this->_bodyParams = $this->_psr7->getParsedBody();
+                $this->_bodyParams = $this->getPsr7Request()->getParsedBody();
             } else {
                 $this->_bodyParams = [];
                 mb_parse_str($this->getRawBody(), $this->_bodyParams);
@@ -186,9 +186,17 @@ class Request extends \yii\web\Request
     /**
      * @inheritdoc
      */
+    public function getContentType()
+    {
+        return $this->getHeaders()->get('Content-Type') ?? '';
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getQueryParams()
     {
-        return $this->_psr7->getQueryParams();
+        return $this->getPsr7Request()->getQueryParams();
     }
 
     /**
@@ -273,7 +281,7 @@ class Request extends \yii\web\Request
      */
     protected function resolveRequestUri()
     {
-        $uri = $this->_psr7->getUri();
+        $uri = $this->getPsr7Request()->getUri();
         $requestUri =  $uri->getPath();
         $queryString = $this->getQueryString();
         if ($queryString !== '') {
@@ -292,7 +300,7 @@ class Request extends \yii\web\Request
      */
     public function getQueryString()
     {
-        return $this->_psr7->getUri()->getQuery();
+        return $this->getPsr7Request()->getUri()->getQuery();
     }
 
     /**
@@ -300,7 +308,7 @@ class Request extends \yii\web\Request
      */
     public function getServerParams()
     {
-        return $this->_psr7->getServerParams();
+        return $this->getPsr7Request()->getServerParams();
     }
 
     /**
@@ -308,7 +316,7 @@ class Request extends \yii\web\Request
      */
     public function getIsSecureConnection()
     {
-        if ($this->_psr7->getUri()->getScheme() === 'https') {
+        if ($this->getPsr7Request()->getUri()->getScheme() === 'https') {
             return true;
         }
 
@@ -330,7 +338,7 @@ class Request extends \yii\web\Request
      */
     public function getServerName()
     {
-        return $this->_psr7->getUri()->getHost();
+        return $this->getPsr7Request()->getUri()->getHost();
     }
 
     /**
@@ -338,7 +346,7 @@ class Request extends \yii\web\Request
      */
     public function getServerPort()
     {
-        return $this->_psr7->getUri()->getPort();
+        return $this->getPsr7Request()->getUri()->getPort();
     }
 
     /**
@@ -371,7 +379,7 @@ class Request extends \yii\web\Request
                 throw new InvalidConfigException(get_class($this) . '::cookieValidationKey must be configured with a secret key.');
             }
 
-            foreach ($this->_psr7->getCookieParam() as $name => $value) {
+            foreach ($this->getPsr7Request()->getCookieParam() as $name => $value) {
                 if (!is_string($value)) {
                     continue;
                 }
@@ -392,7 +400,7 @@ class Request extends \yii\web\Request
                 }
             }
         } else {
-            foreach ($this->_psr7->getCookieParams() as $name => $value) {
+            foreach ($this->getPsr7Request()->getCookieParams() as $name => $value) {
                 $cookies[$name] = Yii::createObject([
                     'class' => 'yii\web\Cookie',
                     'name' => $name,
@@ -417,7 +425,7 @@ class Request extends \yii\web\Request
      */
     public function getAttributes()
     {
-        return $this->_psr7->getAttributes();
+        return $this->getPsr7Request()->getAttributes();
     }
 
     /**
@@ -437,6 +445,6 @@ class Request extends \yii\web\Request
      */
     public function getAttribute($name, $default = null)
     {
-        return $this->_psr7->getAttribute($name, $default);
+        return $this->getPsr7Request()->getAttribute($name, $default);
     }
 }

@@ -5,6 +5,7 @@ namespace yii\Psr7\web\traits;
 use Yii;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
+use yii\base\InvalidConfigException;
 
 trait Psr7ResponseTrait
 {
