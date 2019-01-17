@@ -99,11 +99,11 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
             $this->trigger(self::EVENT_AFTER_REQUEST);
 
             $this->state = self::STATE_END;
-            return $this->terminate($response->getPsr7Response());
+            return $response->getPsr7Response();
         } catch (\Exception $e) {
-            return $this->terminate($this->handleError($e));
+            return $this->handleError($e);
         } catch (\Throwable $e) {
-            return $this->terminate($this->handleError($e));
+            return $this->handleError($e);
         }
     }
 

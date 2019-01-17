@@ -106,10 +106,11 @@ while ($request = $psr7->acceptRequest()) {
         // \yii\Psr7\web\ErrorHandler should handle any exceptions
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
-        
-        // In the event the application encounters an uncaught error force termination of the app
-        $application->terminate();
     }
+
+    // Terminate the application at the end of the request
+    $application->terminate();
+    gc_collect_cycles();
 }
 ```
 
