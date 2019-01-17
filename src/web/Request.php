@@ -18,7 +18,7 @@ class Request extends \yii\web\Request
      * The PSR7 interface
      * @var ServerRequestInterface
      */
-    private $_psr7;
+    private $psr7Request;
 
     /**
      * @inheritdoc
@@ -73,7 +73,7 @@ class Request extends \yii\web\Request
      */
     public function setPsr7Request(ServerRequestInterface $request)
     {
-        $this->_psr7 = $request;
+        $this->psr7Request = $request;
     }
 
     /**
@@ -83,7 +83,7 @@ class Request extends \yii\web\Request
      */
     public function getPsr7Request() :? ServerRequestInterface
     {
-        return $this->_psr7;
+        return $this->psr7Request;
     }
 
     /**

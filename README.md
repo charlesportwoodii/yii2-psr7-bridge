@@ -107,8 +107,6 @@ while ($request = $psr7->acceptRequest()) {
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
-    // reset the application
-    $application->reset();
 }
 ```
 
