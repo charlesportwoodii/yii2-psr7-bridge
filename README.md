@@ -107,9 +107,6 @@ while ($request = $psr7->acceptRequest()) {
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
-
-    // Terminate the application at the end of the request
-    $application->terminate();
     gc_collect_cycles();
 }
 ```
@@ -331,12 +328,12 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Per-action Middleware authentication handling.
 - [x] Per-action middleware chains.
 - [x] Reuse `Application` component instead of re-instantiating in each loop.
-- [ ] `yii\web\ErrorHandler` implementation (partial).
+- [x] `yii\web\ErrorHandler` implementation.
 - [ ] Run `yii-app-basic`.
 - [ ] Bootstrap with `yii\log\Target`.
 - [ ] session handling
-- [ ] `yii-debug`
-- [ ] `yii-gii`.
+- [x] `yii-debug`
+- [x] `yii-gii`.
 - [ ] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
 - [ ] Implement comparable `sendFile`.

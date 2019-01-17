@@ -99,11 +99,11 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
             $this->trigger(self::EVENT_AFTER_REQUEST);
 
             $this->state = self::STATE_END;
-            return $response->getPsr7Response();
+            return $this->terminate($response->getPsr7Response());
         } catch (\Exception $e) {
-            return $this->handleError($e);
+            return $this->terminate($this->handleError($e));
         } catch (\Throwable $e) {
-            return $this->handleError($e);
+            return $this->terminate($this->handleError($e));
         }
     }
 
@@ -115,7 +115,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function terminate(ResponseInterface $response = null) : ResponseInterface
+    protected function terminate(ResponseInterface $response = null) : ResponseInterface
     {
         // Final flush of Yii2's logger to ensure log data is written at the end of the request
         // and to ensure Yii2 Debug populates correctly
