@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5235e138aa5a416c4939b737b64ff14b",
+    "content-hash": "65da321f14ddfb826039fd77d0ac2aa2",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -370,6 +370,59 @@
                 "response"
             ],
             "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
+            "name": "psr/http-server-handler",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-handler.git",
+                "reference": "aff2f80e33b7f026ec96bb42f63242dc50ffcae7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-handler/zipball/aff2f80e33b7f026ec96bb42f63242dc50ffcae7",
+                "reference": "aff2f80e33b7f026ec96bb42f63242dc50ffcae7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side request handler",
+            "keywords": [
+                "handler",
+                "http",
+                "http-interop",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response",
+                "server"
+            ],
+            "time": "2018-10-30T16:46:14+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -2125,16 +2178,16 @@
         },
         {
             "name": "spiral/roadrunner",
-            "version": "v1.3.1",
+            "version": "v1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spiral/roadrunner.git",
-                "reference": "3fa1671b2408dca780de368dcbb2b4ab9df6c379"
+                "reference": "6f81ce6cd30f86455d6ab0dfb52915a52683a2e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spiral/roadrunner/zipball/3fa1671b2408dca780de368dcbb2b4ab9df6c379",
-                "reference": "3fa1671b2408dca780de368dcbb2b4ab9df6c379",
+                "url": "https://api.github.com/repos/spiral/roadrunner/zipball/6f81ce6cd30f86455d6ab0dfb52915a52683a2e9",
+                "reference": "6f81ce6cd30f86455d6ab0dfb52915a52683a2e9",
                 "shasum": ""
             },
             "require": {
@@ -2165,7 +2218,7 @@
                 }
             ],
             "description": "High-performance PHP load balancer and process manager library for Golang",
-            "time": "2019-01-11T13:29:31+00:00"
+            "time": "2019-01-17T10:06:46+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
