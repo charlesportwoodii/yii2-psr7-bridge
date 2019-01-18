@@ -2,10 +2,11 @@
 
 namespace yii\Psr7\web\traits;
 
-use Yii;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 use yii\base\InvalidConfigException;
+use yii\web\Cookie;
+use Yii;
 
 trait Psr7ResponseTrait
 {
@@ -38,11 +39,32 @@ trait Psr7ResponseTrait
         $this->trigger(self::EVENT_AFTER_PREPARE);
         $stream = $this->getPsr7Content();
 
+        // If a session is defined transform it into a `yii\web\Cookie` instance then close the session.
+        if (($session = Yii::$app->getSession()) !== null) {
+            $this->cookies->add(new Cookie([
+                'name' => $session->getName(),
+                'value' => $session->id,
+                'path' => ini_get('session.cookie_path')
+            ]));
+            $session->close();
+        }
+
         $response = new Response(
             $stream,
-            $this->getStatusCode(),
-            $this->getPsr7Headers()
+            $this->getStatusCode()
         );
+
+        // Manually set headers to ensure array headers are added.
+        foreach ($this->getPsr7Headers() as $header => $value) {
+            if (\is_array($header)) {
+                foreach ($header as $v) {
+                    $response = $response->withAddedHeader($header, $v);
+                }
+            } else {
+                $response = $response->withHeader($header, $value);
+            }
+        }
+
 
         $this->trigger(self::EVENT_AFTER_SEND);
         $this->isSent = true;
@@ -88,6 +110,7 @@ trait Psr7ResponseTrait
             }
             $validationKey = $request->cookieValidationKey;
         }
+
         foreach ($this->getCookies() as $cookie) {
             $value = $cookie->value;
             if ($cookie->expire != 1 && isset($validationKey)) {
@@ -96,23 +119,23 @@ trait Psr7ResponseTrait
 
             $data = "$cookie->name=$value";
 
-            if ($cookie->expire != null) {
+            if ($cookie->expire) {
                 $data .= "; Expires={$cookie->expire}";
             }
 
-            if ($cookie->path != null) {
+            if (!empty($cookie->path)) {
                 $data .= "; Path={$cookie->path}";
             }
 
-            if ($cookie->domain != null) {
+            if (!empty($cookie->domain)) {
                 $data .= "; Domain={$cookie->domain}";
             }
 
-            if ($cookie->secure != null) {
+            if ($cookie->secure) {
                 $data .= "; Secure";
             }
 
-            if ($cookie->httpOnly !== null) {
+            if ($cookie->httpOnly) {
                 $data .= "; HttpOnly";
             }
 

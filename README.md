@@ -107,7 +107,7 @@ while ($request = $psr7->acceptRequest()) {
         // however you should implement your custom error handler should anything slip past.
         $psr7->getWorker()->error((string)$e);
     }
-    
+
     // Workers will steadily grow in memory with each request until PHP memory_limit is reached, resulting in a worker crash.
     // With RoadRunner, you can tell the worker to shutdown if it approaches 10% of the maximum memory limit, allowing you to achieve better uptime.
     if ($application->clean()) {
@@ -116,6 +116,16 @@ while ($request = $psr7->acceptRequest()) {
     }
 }
 ```
+
+### Worker Crash Protection
+
+With each request PHP's memory usage will gradually increase. Calling `$application->clean()` will tell you if the current script usage is within 10% of your `memory_limit` ini set. While most workers will handle a out-of-memory crash exception, you can use this method to explicitly tell the current worker to stop and be reconstructed to avoid HTTP 500's thrown by out-of-memory issues.
+
+### Session
+
+This library is fully compatible with `yii\web\Session` and classes that descend from it with a few caveats.
+
+> Avoid accessing `$application->getSession()` within your worker.
 
 ### Request
 
@@ -152,7 +162,7 @@ Since `\yii\Psr7\web\Application` is PSR-15 middleware compatible, you can also 
 
 > This library does not implement it's own dispatcher, allowing the developer the freedom to use a PSR-15 compatible dispatcher of their choice for middleware handling.
 
-In your test script you can utilize `middlewares/utils`.
+As an example with `middlewares/utils`:
 
 ```php
 $response = \Middlewares\Utils\Dispatcher::run([
@@ -162,20 +172,6 @@ $response = \Middlewares\Utils\Dispatcher::run([
         return $application->handle($request);
     }
 ], $request);
-
-// rr response
-$psr7->respond($response);
-```
-
-#### PSR-15 with ajgarlag/psr15-dispatcher
-
-Another example with `ajgarlag/psr15-dispatcher` package as the dispatcher.
-
-```php
-$response = \Ajgarlag\Psr15\Dispatcher\Pipe::create([
-    // new Middleware,
-    // new NextMiddleware, // and so forth...
-])->process($request, $application);
 
 // rr response
 $psr7->respond($response);
@@ -310,9 +306,8 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 ## Limitations
 
 - File streams currently don't work (eg `yii\web\Response::sendFile`, `yii\web\Response::sendContentAsFile`, `yii\web\Response::sendStreamAsFile`)
-- Performance isn't optimal as the `Application` component is manually reloaded each time.
-- Yii2 leaks memory. Your PSR7 task runner should automatically restart workers that crash, so memory consumption shouldn't balloon on the server. Expect worker crashes.
-- Yii2's ExitHandler or ErrorHandler doesn't _explicitly_ close connections at the end of the script or on a crash. For the time being, you are expected to handle these yourself to prevent connection leaks.
+- The Yii2 debug toolbar `yii2-debug` will show the wrong request time and memory usage.
+- Yii2 can't send `SameSite` cookies
 
 ## Current Status
 
@@ -335,12 +330,12 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Per-action middleware chains.
 - [x] Reuse `Application` component instead of re-instantiating in each loop.
 - [x] `yii\web\ErrorHandler` implementation.
-- [ ] Run `yii-app-basic`.
+- [x] Run `yii-app-basic`.
 - [ ] Bootstrap with `yii\log\Target`.
-- [ ] session handling
-- [x] `yii-debug`
+- [?] session handling
+- [x] `yii-debug`.
 - [x] `yii-gii`.
-- [?] Fix fatal memory leak under load
+- [x] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
 - [ ] Implement comparable `sendFile`.
 - [ ] `yii\web\Request::$methodParam` support.

@@ -22,6 +22,11 @@ use ReflectionMethod;
 class Application extends \yii\web\Application implements RequestHandlerInterface
 {
     /**
+     * @inheritdoc
+     */
+    public $version = "0.0.1";
+
+    /**
      * @var array The configuration
      */
     private $config;
@@ -43,6 +48,9 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         // Set the environment aliases
         Yii::setAlias('@webroot', \getenv('YII_ALIAS_WEBROOT'));
         Yii::setAlias('@web', \getenv('YII_ALIAS_WEB'));
+
+        ini_set('use_cookies', 'false');
+        ini_set('use_only_cookies', 'true');
     }
 
     /**
@@ -54,6 +62,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         Yii::$app = $this;
         static::setInstance($this);
         $config = $this->config;
+
         $config['components']['request']['psr7Request'] = $request;
 
         $this->state = self::STATE_BEGIN;
@@ -61,7 +70,26 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         $this->registerErrorHandler($config);
         Component::__construct($config);
 
+         // Session data has to be explicitly loaded before any bootstrapping occurs to ensure compatability
+         // with bootstrapped components (such as yii2-debug).
+        if (($session = $this->getSession()) !== null) {
+            // Close the session if it was open.
+            $session->close();
+
+            // If a session cookie is defined, load it into Yii::$app->session
+            if (isset($request->getCookieParams()[$session->getName()])) {
+                $session->setId($request->getCookieParams()[$session->getName()]);
+            }
+        }
+
+        // Open the session before any modules that need it are bootstrapped.
+        $session->open();
         $this->bootstrap();
+
+        // Once bootstrapping is done we can close the session.
+        // Accessing it in the future will re-open it.
+        $session->close();
+
     }
 
     /**
@@ -77,6 +105,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     protected function bootstrap()
     {
+        // Call the bootstrap method in \yii\base\Application instead of \yii\web\Application
         $method = new ReflectionMethod(get_parent_class(get_parent_class($this)), 'bootstrap');
         $method->setAccessible(true);
         $method->invoke($this);
@@ -127,8 +156,12 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
             $logger->flush(true);
         }
 
-        // Close the session
-        $this->getSession()->close();
+        // Close all instances of \yii\db\Connection
+        foreach ($this->getComponents(false) as $id => $component) {
+            if ($component instanceOf \yii\db\Connection) {
+                $component->close();
+            }
+        }
 
         // De-register the event handlers for this class
         $this->off(self::EVENT_BEFORE_REQUEST);
