@@ -70,8 +70,8 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         $this->registerErrorHandler($config);
         Component::__construct($config);
 
-         // Session data has to be explicitly loaded before any bootstrapping occurs to ensure compatability
-         // with bootstrapped components (such as yii2-debug).
+        // Session data has to be explicitly loaded before any bootstrapping occurs to ensure compatability
+        // with bootstrapped components (such as yii2-debug).
         if (($session = $this->getSession()) !== null) {
             // Close the session if it was open.
             $session->close();
