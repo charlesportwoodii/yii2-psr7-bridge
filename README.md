@@ -331,8 +331,8 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Reuse `Application` component instead of re-instantiating in each loop.
 - [x] `yii\web\ErrorHandler` implementation.
 - [x] Run `yii-app-basic`.
-- [ ] Bootstrap with `yii\log\Target`.
-- [?] session handling
+- [x] Bootstrap with `yii\log\Target`.
+- [x] session handling
 - [x] `yii-debug`.
 - [x] `yii-gii`.
 - [x] Fix fatal memory leak under load
