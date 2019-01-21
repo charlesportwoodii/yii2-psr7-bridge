@@ -125,7 +125,12 @@ With each request PHP's memory usage will gradually increase. Calling `$applicat
 
 This library is fully compatible with `yii\web\Session` and classes that descend from it with a few caveats.
 
-> Avoid accessing `$application->getSession()` within your worker.
+1. The application component adds the following session ini settings at runtime. Do not overwrite these settings as they are necessary for `yii\web\Session`.
+```php
+ini_set('use_cookies', 'false');
+ini_set('use_only_cookies', 'true');
+```
+2. Don't access `$application->getSession()` within your worker.
 
 ### Request
 

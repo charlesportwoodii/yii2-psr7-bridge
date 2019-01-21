@@ -49,8 +49,12 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         Yii::setAlias('@webroot', \getenv('YII_ALIAS_WEBROOT'));
         Yii::setAlias('@web', \getenv('YII_ALIAS_WEB'));
 
+        // This is necessary to get \yii\web\Session to work properly.
         ini_set('use_cookies', 'false');
         ini_set('use_only_cookies', 'true');
+
+        Yii::$app = $this;
+        static::setInstance($this);
     }
 
     /**
@@ -59,8 +63,6 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     protected function reset(ServerRequestInterface $request)
     {
-        Yii::$app = $this;
-        static::setInstance($this);
         $config = $this->config;
 
         $config['components']['request']['psr7Request'] = $request;
