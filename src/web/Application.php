@@ -241,9 +241,9 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     {
         if (!$this->memoryLimit) {
             $limit  = ini_get('memory_limit');
-            sscanf ($limit, '%u%c', $number, $suffix);
-            if (isset ($suffix)) {
-                $number = $number * pow (1024, strpos (' KMG', strtoupper($suffix)));
+            sscanf($limit, '%u%c', $number, $suffix);
+            if (isset($suffix)) {
+                $number = $number * pow(1024, strpos(' KMG', strtoupper($suffix)));
             }
 
             $this->memoryLimit = $number;
