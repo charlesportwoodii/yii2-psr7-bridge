@@ -155,7 +155,6 @@ class Request extends \yii\web\Request
     public function getBodyParams()
     {
         if ($this->_bodyParams === null) {
-            // @todo: Implement method tunneling
             $rawContentType = $this->getContentType();
             if (($pos = strpos($rawContentType, ';')) !== false) {
                 // e.g. text/html; charset=UTF-8

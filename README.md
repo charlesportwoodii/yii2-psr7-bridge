@@ -333,7 +333,7 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] `yii\web\Request::loadCookies()`.
 - [x] Per-action Middleware authentication handling.
 - [x] Per-action middleware chains.
-- [x] Reuse `Application` component instead of re-instantiating in each loop.
+- [x] Reuse `Application` component instead of re-instantiating in each looåp.
 - [x] `yii\web\ErrorHandler` implementation.
 - [x] Run `yii-app-basic`.
 - [x] Bootstrap with `yii\log\Target`.
@@ -343,7 +343,7 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
 - [ ] Implement comparable `sendFile`.
-- [ ] `yii\web\Request::$methodParam` support.
+- [ ] `yii\web\Request::$methodParam` support. (Not really applicable to `ServerRequestInterface`)
 - [ ] Test Coverage
 
 -----

@@ -19,6 +19,10 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionStatuscode()
+    {
+        Yii::$app->response->statusCode = 201;
+    }
     public function actionRedirect()
     {
         $response = Yii::$app->response->redirect('/site/index');
@@ -51,7 +55,7 @@ class SiteController extends Controller
         $response->cookies->add(new Cookie([
             'name' => 'test',
             'value' => 'test',
-            'httpOnly' => true
+            'httpOnly' => false
         ]));
 
         $response->cookies->add(new Cookie([

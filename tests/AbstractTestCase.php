@@ -8,38 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class AbstractTestCase extends TestCase
 {
-    private $_app;
+    protected $app;
 
-    private $_config;
-
-    public function init(ServerRequestInterface $request)
-    {
-        $config = $this->getConfig();
-        $this->setApplication((new \yii\Psr7\web\Application($config, $request)));
-    }
-
-    public function getApplication()
-    {
-        return $this->_app;
-    }
-
-    public function setApplication(Application $app)
-    {
-        $this->_app = $app;
-    }
-
-    public function getConfig()
-    {
-        return $this->_config;
-    }
-
-    private function setConfig(array $config)
-    {
-        $this->_config = $config;
-    }
+    protected $config;
 
     public function setUp()
     {
-        $this->setConfig(require_once __DIR__ . '/bootstrap.php');
+        $this->config = require __DIR__ . '/bootstrap.php';
+        $this->app = new Application($this->config);
+        $this->assertInstanceOf('\yii\Psr7\web\Application', $this->app);
     }
 }

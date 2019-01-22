@@ -15,7 +15,6 @@ return [
     'components' => [
         'request' => [
             'class' => \yii\Psr7\web\Request::class,
-            'request' => null,
             'enableCookieValidation' => false,
             'enableCsrfValidation' => false,
             'enableCsrfCookie' => false,
@@ -27,6 +26,9 @@ return [
         'response' => [
             'class' => \yii\Psr7\web\Response::class,
             'charset' => 'UTF-8'
+        ],
+        'user' => [
+            'enableAutoLogin' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
