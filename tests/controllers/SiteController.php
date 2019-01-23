@@ -23,6 +23,7 @@ class SiteController extends Controller
     {
         Yii::$app->response->statusCode = 201;
     }
+
     public function actionRedirect()
     {
         $response = Yii::$app->response->redirect('/site/index');

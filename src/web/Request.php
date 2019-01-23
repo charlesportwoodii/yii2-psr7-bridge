@@ -373,6 +373,9 @@ class Request extends \yii\web\Request
             $authHeader = $headers->get('authorization');
             if (\substr($authHeader, 0, 6) === 'Basic ') {
                 $credentials = \base64_decode(\str_replace('Basic ', '', $authHeader));
+                if (\strpos($credentials, ':') === false) {
+                    return [null, null];
+                }
                 return \explode(':', $credentials);
             }
         }

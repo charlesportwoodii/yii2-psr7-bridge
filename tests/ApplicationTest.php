@@ -80,16 +80,18 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testGetWithQueryParams()
     {
-        $request = ServerRequestFactory::fromGlobals([
-            'REQUEST_URI' => 'site/get',
-            'REQUEST_METHOD' => 'GET'
-        ],
-        [
-            'foo' => 'bar',
-            'a' => [
-                'b' => 'c'
+        $request = ServerRequestFactory::fromGlobals(
+            [
+                'REQUEST_URI' => 'site/get',
+                'REQUEST_METHOD' => 'GET'
+            ],
+            [
+                'foo' => 'bar',
+                'a' => [
+                    'b' => 'c'
+                ]
             ]
-        ]);
+        );
 
         $response = $this->app->handle($request);
 
@@ -105,17 +107,19 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testPostWithRequestBody()
     {
-        $request = ServerRequestFactory::fromGlobals([
-            'REQUEST_URI' => 'site/post',
-            'REQUEST_METHOD' => 'POST'
-        ],
-        null,
-        [
-            'foo' => 'bar',
-            'a' => [
-                'b' => 'c'
+        $request = ServerRequestFactory::fromGlobals(
+            [
+                'REQUEST_URI' => 'site/post',
+                'REQUEST_METHOD' => 'POST'
+            ],
+            null,
+            [
+                'foo' => 'bar',
+                'a' => [
+                    'b' => 'c'
+                ]
             ]
-        ]);
+        );
 
         $response = $this->app->handle($request);
 
@@ -154,22 +158,64 @@ class ApplicationTest extends AbstractTestCase
         }
     }
 
+    /**
+     * Verifies that cookies passed to the server are recieved
+     */
     public function testGetCookie()
     {
-        $request = ServerRequestFactory::fromGlobals([
-            'REQUEST_URI' => 'site/getcookies',
-            'REQUEST_METHOD' => 'GET'
-        ],
-        null,
-        null,
-        [
-            'test=test; HttpOnly; Path=/'
-        ]);
+        $request = ServerRequestFactory::fromGlobals(
+            [
+                'REQUEST_URI' => 'site/getcookies',
+                'REQUEST_METHOD' => 'GET'
+            ],
+            null,
+            null,
+            [
+               'test' => 'test'
+            ]
+        );
 
         $response = $this->app->handle($request);
 
         $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
-        var_dump($body = $response->getBody()->getContents());
+        $body = $response->getBody()->getContents();
+        $this->assertEquals('{"test":{"name":"test","value":"test","domain":"","expire":null,"path":"/","secure":false,"httpOnly":true}}', $body);
+    }
+
+    /**
+     * Tests HTTP Basic Auth headers are recieved
+     */
+    public function testAuth()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/auth',
+            'REQUEST_METHOD' => 'GET',
+            'HTTP_authorization' => 'Basic ' . \base64_encode('foo:bar')
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = $response->getBody()->getContents();
+        $this->assertEquals('{"username":"foo","password":"bar"}', $body);
+    }
+
+    /**
+     * Tests HTTP Basic Auth headers are recieved
+     */
+    public function testAuthWithBadHeaders()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/auth',
+            'REQUEST_METHOD' => 'GET',
+            'HTTP_authorization' => 'Basic foo:bar'
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $body = $response->getBody()->getContents();
+        $this->assertEquals('{"username":null,"password":null}', $body);
     }
 }
