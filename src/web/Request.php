@@ -462,4 +462,29 @@ class Request extends \yii\web\Request
     {
         return $this->getPsr7Request()->getAttribute($name, $default);
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function getHostInfo()
+    {
+        if ($this->_hostInfo === null) {
+            $secure = $this->getIsSecureConnection();
+            $http = $secure ? 'https' : 'http';
+
+            if ($this->headers->has('X-Forwarded-Host')) {
+                $this->_hostInfo = $http . '://' . $this->headers->get('X-Forwarded-Host');
+            } elseif ($this->headers->has('Host')) {
+                $this->_hostInfo = $http . '://' . $this->headers->get('Host');
+            } elseif (isset($this->getServerParams()['SERVER_NAME'])) {
+                $this->_hostInfo = $http . '://' . $this->getServerParams()['SERVER_NAME'];
+                $port = $secure ? $this->getSecurePort() : $this->getPort();
+                if (($port !== 80 && !$secure) || ($port !== 443 && $secure)) {
+                    $this->_hostInfo .= ':' . $port;
+                }
+            }
+        }
+
+        return $this->_hostInfo;
+    }
 }
