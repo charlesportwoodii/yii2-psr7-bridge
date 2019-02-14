@@ -394,7 +394,7 @@ class Request extends \yii\web\Request
                 throw new InvalidConfigException(get_class($this) . '::cookieValidationKey must be configured with a secret key.');
             }
 
-            foreach ($this->getPsr7Request()->getCookieParam() as $name => $value) {
+            foreach ($this->getPsr7Request()->getCookieParams() as $name => $value) {
                 if (!is_string($value)) {
                     continue;
                 }
