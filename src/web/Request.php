@@ -399,6 +399,8 @@ class Request extends \yii\web\Request
                     continue;
                 }
 
+                $value = \urldecode($value);
+
                 $data = Yii::$app->getSecurity()->validateData($value, $this->cookieValidationKey);
                 if ($data === false) {
                     continue;

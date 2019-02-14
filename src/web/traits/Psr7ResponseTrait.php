@@ -117,7 +117,7 @@ trait Psr7ResponseTrait
                 $value = Yii::$app->getSecurity()->hashData(serialize([$cookie->name, $value]), $validationKey);
             }
 
-            $data = "$cookie->name=$value";
+            $data = "$cookie->name=" . \urlencode($value);
 
             if ($cookie->expire) {
                 $data .= "; Expires={$cookie->expire}";
