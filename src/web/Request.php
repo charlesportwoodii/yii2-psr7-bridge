@@ -208,25 +208,8 @@ class Request extends \yii\web\Request
      */
     public function getScriptUrl()
     {
-        if ($this->_scriptUrl === null) {
-            $scriptFile = $this->getScriptFile();
-            $scriptName = basename($scriptFile);
-            if (isset($this->getServerParams()['SCRIPT_NAME']) && basename($this->getServerParams()['SCRIPT_NAME']) === $scriptName) {
-                $this->_scriptUrl = $this->getServerParams()['SCRIPT_NAME'];
-            } elseif (isset($this->getServerParams()['PHP_SELF']) && basename($this->getServerParams()['PHP_SELF']) === $scriptName) {
-                $this->_scriptUrl = $this->getServerParams()['PHP_SELF'];
-            } elseif (isset($this->getServerParams()['ORIG_SCRIPT_NAME']) && basename($this->getServerParams()['ORIG_SCRIPT_NAME']) === $scriptName) {
-                $this->_scriptUrl = $this->getServerParams()['ORIG_SCRIPT_NAME'];
-            } elseif (isset($this->getServerParams()['PHP_SELF']) && ($pos = strpos($this->getServerParams()['PHP_SELF'], '/' . $scriptName)) !== false) {
-                $this->_scriptUrl = substr($this->getServerParams()['SCRIPT_NAME'], 0, $pos) . '/' . $scriptName;
-            } elseif (!empty($this->getServerParams()['DOCUMENT_ROOT']) && strpos($scriptFile, $this->getServerParams()['DOCUMENT_ROOT']) === 0) {
-                $this->_scriptUrl = str_replace([$this->getServerParams()['DOCUMENT_ROOT'], '\\'], ['', '/'], $scriptFile);
-            } else {
-                throw new InvalidConfigException('Unable to determine the entry script URL.');
-            }
-        }
-
-        return $this->_scriptUrl;
+        // The script URL doesn't matter in proxy situations since it is always the bootstrap endpoint.
+        return '';
     }
 
     /**
