@@ -2,6 +2,8 @@
 
 namespace yii\Psr7\web;
 
+use yii\Psr7\web\monitor\EventMonitor;
+use yii\Psr7\web\monitor\ConnectionMonitor;
 use yii\Psr7\web\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,7 +26,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     /**
      * @inheritdoc
      */
-    public $version = "0.0.1";
+    public $version = "0.0.2";
 
     /**
      * @var array The configuration
@@ -35,6 +37,11 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      * @var int $memoryLimit
      */
     private $memoryLimit;
+
+    /**
+     * @var array $monitors
+     */
+    private $monitors = [];
 
     /**
      * Overloaded constructor to persist configuration
@@ -55,6 +62,20 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
 
         Yii::$app = $this;
         static::setInstance($this);
+        $this->monitors = $this->monitors();
+    }
+
+    /**
+     * Sets up any monitors we want
+     *
+     * @return array
+     */
+    public function monitors()
+    {
+        return [
+            new ConnectionMonitor,
+            new EventMonitor
+        ];
     }
 
     /**
@@ -63,6 +84,16 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     protected function reset(ServerRequestInterface $request)
     {
+        // Override YII_BEGIN_TIME if possible for yii2-debug
+        // and other modules that depend on it
+        if (\function_exists('uopz_redefine')) {
+            \uopz_redefine('YII_BEGIN_TIME', microtime(true));
+        }
+
+        foreach ($this->monitors as $monitor) {
+            $monitor->on();
+        }
+
         $config = $this->config;
 
         $config['components']['request']['psr7Request'] = $request;
@@ -85,13 +116,13 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         }
 
         // Open the session before any modules that need it are bootstrapped.
+        $this->ensureBehaviors();
         $session->open();
         $this->bootstrap();
 
         // Once bootstrapping is done we can close the session.
         // Accessing it in the future will re-open it.
         $session->close();
-
     }
 
     /**
@@ -152,28 +183,18 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     protected function terminate(ResponseInterface $response) : ResponseInterface
     {
-        // Final flush of Yii2's logger to ensure log data is written at the end of the request
-        // and to ensure Yii2 Debug populates correctly
+        // Handle any monitors that are attached
+        foreach ($this->monitors as $monitor) {
+            $monitor->shutdown();
+        }
+
+        // Reset fileuploads
+        \yii\web\UploadedFile::reset();
+
+        // Reset the logger
         if (($logger = Yii::getLogger()) !== null) {
             $logger->flush(true);
         }
-
-        // Close all instances of \yii\db\Connection
-        foreach ($this->getComponents(false) as $id => $component) {
-            if ($component instanceOf \yii\db\Connection) {
-                $component->close();
-            }
-        }
-
-        // De-register the event handlers for this class
-        $this->off(self::EVENT_BEFORE_REQUEST);
-        $this->off(self::EVENT_AFTER_REQUEST);
-
-        // Detatch response events
-        $r = $this->getResponse();
-        $r->off(Response::EVENT_AFTER_PREPARE);
-        $r->off(Response::EVENT_AFTER_SEND);
-        $r->off(Response::EVENT_BEFORE_SEND);
 
         // Return the parent response
         return $response;
