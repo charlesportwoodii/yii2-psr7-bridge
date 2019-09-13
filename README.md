@@ -217,7 +217,7 @@ public function behaviors()
                  */
             ))->attribute('username')
         ]
-    ];
+    ]);
 }
 ```
 
@@ -242,7 +242,7 @@ public function behaviors()
                 new \Middlewares\Uuid,
             ]
         ]
-    ];
+    ]);
 }
 ```
 
@@ -264,7 +264,7 @@ public function behaviors()
                 }
             ]
         ]
-    ];
+    ]);
 }
 ```
 
