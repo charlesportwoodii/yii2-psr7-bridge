@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace yii\Psr7\filters;
 
@@ -39,7 +41,7 @@ class MiddlewareActionFilter extends ActionFilter implements RequestHandlerInter
      *
      * @return ServerRequestInterface
      */
-    protected function getModifiedRequest() : ServerRequestInterface
+    protected function getModifiedRequest(): ServerRequestInterface
     {
         return $this->request;
     }
@@ -47,7 +49,7 @@ class MiddlewareActionFilter extends ActionFilter implements RequestHandlerInter
     /**
      * Before action
      *
-     * @param \yii\base\Action $action
+     * @param  \yii\base\Action $action
      * @return void
      */
     public function beforeAction($action)
@@ -61,7 +63,7 @@ class MiddlewareActionFilter extends ActionFilter implements RequestHandlerInter
 
         foreach ($this->middlewares as $middleware) {
             $psr7Request = Yii::$app->request->getPsr7Request();
-            if ($middleware instanceOf \Closure) {
+            if ($middleware instanceof \Closure) {
                 $response = $middleware($psr7Request, $instance);
             } else {
                 $response = $middleware->process($psr7Request, $instance);
@@ -96,13 +98,13 @@ class MiddlewareActionFilter extends ActionFilter implements RequestHandlerInter
      *
      * An out-of-spec HTTP status code is thrown to not interfere with existing HTTP specifications.
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->request = $request;
-        return new \Zend\Diactoros\Response\EmptyResponse(
+        return new \Laminas\Diactoros\Response\EmptyResponse(
             $this->continueStatusCode
         );
     }

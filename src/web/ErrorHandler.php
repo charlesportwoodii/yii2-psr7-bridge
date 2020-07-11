@@ -117,9 +117,11 @@ class ErrorHandler extends \yii\web\ErrorHandler
                     ini_set('display_errors', 'true');
                 }
                 $file = $useErrorView ? $this->errorView : $this->exceptionView;
-                $response->data = $this->renderFile($file, [
+                $response->data = $this->renderFile(
+                    $file, [
                     'exception' => $exception,
-                ]);
+                    ]
+                );
             }
         } else if ($response->format === Response::FORMAT_RAW) {
             $response->data = static::convertExceptionToString($exception);

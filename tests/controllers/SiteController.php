@@ -53,16 +53,24 @@ class SiteController extends Controller
     public function actionCookie()
     {
         $response = Yii::$app->response;
-        $response->cookies->add(new Cookie([
-            'name' => 'test',
-            'value' => 'test',
-            'httpOnly' => false
-        ]));
+        $response->cookies->add(
+            new Cookie(
+                [
+                'name' => 'test',
+                'value' => 'test',
+                'httpOnly' => false
+                ]
+            )
+        );
 
-        $response->cookies->add(new Cookie([
-            'name' => 'test2',
-            'value' => 'test2'
-        ]));
+        $response->cookies->add(
+            new Cookie(
+                [
+                'name' => 'test2',
+                'value' => 'test2'
+                ]
+            )
+        );
     }
 
     public function actionGetcookies()

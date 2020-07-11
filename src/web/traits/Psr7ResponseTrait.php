@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace yii\Psr7\web\traits;
 
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 use yii\base\InvalidConfigException;
 use yii\web\Cookie;
 use Yii;
@@ -13,7 +15,7 @@ trait Psr7ResponseTrait
     /**
      * Populates this response with a PSR7 Response Interface
      *
-     * @param ResponseInterface $response
+     * @param  ResponseInterface $response
      * @return self
      */
     public function withPsr7Response(ResponseInterface $response)
@@ -32,7 +34,7 @@ trait Psr7ResponseTrait
      *
      * @return ResponseInterface
      */
-    public function getPsr7Response() : ResponseInterface
+    public function getPsr7Response(): ResponseInterface
     {
         $this->trigger(self::EVENT_BEFORE_SEND);
         $this->prepare();
@@ -41,11 +43,15 @@ trait Psr7ResponseTrait
 
         // If a session is defined transform it into a `yii\web\Cookie` instance then close the session.
         if (($session = Yii::$app->getSession()) !== null) {
-            $this->cookies->add(new Cookie([
-                'name' => $session->getName(),
-                'value' => $session->id,
-                'path' => ini_get('session.cookie_path')
-            ]));
+            $this->cookies->add(
+                new Cookie(
+                    [
+                    'name' => $session->getName(),
+                    'value' => $session->id,
+                    'path' => ini_get('session.cookie_path')
+                    ]
+                )
+            );
             $session->close();
         }
 
@@ -77,7 +83,7 @@ trait Psr7ResponseTrait
      *
      * @return array
      */
-    private function getPsr7Headers() : array
+    private function getPsr7Headers(): array
     {
         $headers = [];
         foreach ($this->getHeaders() as $name => $values) {
@@ -100,7 +106,7 @@ trait Psr7ResponseTrait
      *
      * @return array
      */
-    private function getPsr7Cookies() : array
+    private function getPsr7Cookies(): array
     {
         $cookies = [];
         $request = Yii::$app->getRequest();

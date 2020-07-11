@@ -9,7 +9,6 @@
     convertWarningsToExceptions = "true"
     processIsolation            = "true"
     stopOnFailure               = "false" >
-
     <testsuites>
         <testsuite name="Yii2 PSR7 Bridge Test Suite">
             <directory>./tests</directory>
