@@ -16,6 +16,7 @@ class Request extends \yii\web\Request
 {
     /**
      * The PSR7 interface
+     *
      * @var ServerRequestInterface
      */
     private $psr7Request;
@@ -68,7 +69,7 @@ class Request extends \yii\web\Request
     /**
      * Sets the PSR-7 Request object
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return void
      */
     public function setPsr7Request(ServerRequestInterface $request)
@@ -250,7 +251,8 @@ class Request extends \yii\web\Request
 
         // try to encode in UTF8 if not so
         // http://w3.org/International/questions/qa-forms-utf-8.html
-        if (!preg_match('%^(?:
+        if (!preg_match(
+            '%^(?:
             [\x09\x0A\x0D\x20-\x7E]              # ASCII
             | [\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
             | \xE0[\xA0-\xBF][\x80-\xBF]         # excluding overlongs
@@ -259,7 +261,8 @@ class Request extends \yii\web\Request
             | \xF0[\x90-\xBF][\x80-\xBF]{2}      # planes 1-3
             | [\xF1-\xF3][\x80-\xBF]{3}          # planes 4-15
             | \xF4[\x80-\x8F][\x80-\xBF]{2}      # plane 16
-            )*$%xs', $pathInfo)
+            )*$%xs', $pathInfo
+        )
         ) {
             $pathInfo = utf8_encode($pathInfo);
         }
@@ -391,22 +394,26 @@ class Request extends \yii\web\Request
 
                 $data = @unserialize($data);
                 if (is_array($data) && isset($data[0], $data[1]) && $data[0] === $name) {
-                    $cookies[$name] = Yii::createObject([
+                    $cookies[$name] = Yii::createObject(
+                        [
                         'class' => 'yii\web\Cookie',
                         'name' => $name,
                         'value' => $data[1],
                         'expire' => null,
-                    ]);
+                        ]
+                    );
                 }
             }
         } else {
             foreach ($this->getPsr7Request()->getCookieParams() as $name => $value) {
-                $cookies[$name] = Yii::createObject([
+                $cookies[$name] = Yii::createObject(
+                    [
                     'class' => 'yii\web\Cookie',
                     'name' => $name,
                     'value' => $value,
                     'expire' => null,
-                ]);
+                    ]
+                );
             }
         }
         return $cookies;
@@ -438,16 +445,16 @@ class Request extends \yii\web\Request
      * This method obviates the need for a hasAttribute() method, as it allows
      * specifying a default value to return if the attribute is not found.
      *
-     * @see getAttributes()
-     * @param string $name The attribute name.
-     * @param mixed $default Default value to return if the attribute does not exist.
+     * @see    getAttributes()
+     * @param  string $name    The attribute name.
+     * @param  mixed  $default Default value to return if the attribute does not exist.
      * @return mixed
      */
     public function getAttribute($name, $default = null)
     {
         return $this->getPsr7Request()->getAttribute($name, $default);
     }
-    
+
     /**
      * @inheritdoc
      */

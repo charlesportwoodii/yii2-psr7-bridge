@@ -1,7 +1,7 @@
 <?php
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 // create a log channel
 $logger = new Logger('name');
@@ -21,7 +21,9 @@ return [
             'parsers' => [
                 'application/json' => \yii\web\JsonParser::class,
             ]
-
+        ],
+        'cache' => [
+            'class' => \yii\caching\FileCache::class
         ],
         'response' => [
             'class' => \yii\Psr7\web\Response::class,

@@ -1,20 +1,22 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace yii\Psr7\filters\auth;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-use yii\filters\auth\AuthMethod;
+use Yii;
 use yii\filters\auth\AuthInterface;
 
+use yii\filters\auth\AuthMethod;
+use yii\web\HttpException;
+use yii\web\IdentityInterface;
 use yii\web\Request;
 use yii\web\Response;
-use yii\web\HttpException;
 use yii\web\User;
-use yii\web\IdentityInterface;
-use Yii;
 
 class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandlerInterface
 {
@@ -54,7 +56,7 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
      *
      * @return ServerRequestInterface
      */
-    protected function getModifiedRequest() : ServerRequestInterface
+    protected function getModifiedRequest(): ServerRequestInterface
     {
         return $this->request;
     }
@@ -62,9 +64,9 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
     /**
      * Authenticates a user
      *
-     * @param User $user
-     * @param request $request
-     * @param Response $response
+     * @param  User     $user
+     * @param  request  $request
+     * @param  Response $response
      * @return IdentityInterface|null
      */
     public function authenticate($user, $request, $response)
@@ -87,14 +89,14 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
 
         // If we get a continue status code and the expected user attribute is set
         // attempt to log this user in use yii\web\User::loginByAccessToken
-        if (
-            $process->getStatusCode() === $this->continueStatusCode &&
-            $process->hasHeader(static::TOKEN_ATTRIBUTE_NAME)
+        if ($process->getStatusCode() === $this->continueStatusCode
+            && $process->hasHeader(static::TOKEN_ATTRIBUTE_NAME)
         ) {
             if ($identity = $user->loginByAccessToken(
                 $process->getHeader(static::TOKEN_ATTRIBUTE_NAME),
                 \get_class($this)
-            )) {
+            )
+            ) {
                 return $identity;
             }
         }
@@ -112,23 +114,23 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
      *
      * An out-of-spec HTTP status code is thrown to not interfere with existing HTTP specifications.
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-       return new \Zend\Diactoros\Response\EmptyResponse(
-           $this->continueStatusCode,
-           [
-               static::TOKEN_ATTRIBUTE_NAME => $request->getAttribute($this->attribute)
-           ]
+        return new \Laminas\Diactoros\Response\EmptyResponse(
+            $this->continueStatusCode,
+            [
+                static::TOKEN_ATTRIBUTE_NAME => $request->getAttribute($this->attribute)
+            ]
         );
     }
 
     /**
      * If the authentication event failed, rethrow as an HttpException to end processing
      *
-     * @param Response $response
+     * @param  Response $response
      * @throws HttpException
      * @return void
      */

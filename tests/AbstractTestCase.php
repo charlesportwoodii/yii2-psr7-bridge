@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace yii\Psr7\tests;
 
-use yii\Psr7\web\Application;
-use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use yii\Psr7\web\Application;
 
 class AbstractTestCase extends TestCase
 {
@@ -12,9 +14,9 @@ class AbstractTestCase extends TestCase
 
     protected $config;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->config = require __DIR__ . '/bootstrap.php';
+        $this->config = include __DIR__ . '/bootstrap.php';
         $this->app = new Application($this->config);
         $this->assertInstanceOf('\yii\Psr7\web\Application', $this->app);
     }

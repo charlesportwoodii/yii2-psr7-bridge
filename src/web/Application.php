@@ -2,19 +2,19 @@
 
 namespace yii\Psr7\web;
 
-use yii\Psr7\web\monitor\EventMonitor;
-use yii\Psr7\web\monitor\ConnectionMonitor;
-use yii\Psr7\web\Response;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use yii\base\Component;
-use Yii;
-
 use ReflectionMethod;
+
+use Yii;
+use yii\base\Component;
+
+use yii\Psr7\web\monitor\ConnectionMonitor;
+use yii\Psr7\web\monitor\EventMonitor;
+
+use yii\Psr7\web\Response;
 
 /**
  * A Yii2 compatible A PSR-15 RequestHandlerInterface Application component
@@ -80,6 +80,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
 
     /**
      * Re-registers all components with the original configuration
+     *
      * @return void
      */
     protected function reset(ServerRequestInterface $request)
@@ -147,7 +148,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     /**
      * PSR-15 RequestHandlerInterface
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request) : ResponseInterface
@@ -178,7 +179,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      *
      * This method handles final log flushing and session termination
      *
-     * @param ResponseInterface $response
+     * @param  ResponseInterface $response
      * @return ResponseInterface
      */
     protected function terminate(ResponseInterface $response) : ResponseInterface
@@ -203,7 +204,7 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     /**
      * Handles exceptions and errors thrown by the request handler
      *
-     * @param \Throwable|\Exception $exception
+     * @param  \Throwable|\Exception $exception
      * @return ResponseInterface
      */
     private function handleError(\Throwable $exception) : ResponseInterface
@@ -221,13 +222,16 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
      */
     public function coreComponents()
     {
-        return array_merge(parent::coreComponents(), [
-            'request' => ['class' => \yii\Psr7\web\Request::class],
-            'response' => ['class' => \yii\Psr7\web\Response::class],
-            'session' => ['class' => \yii\web\Session::class],
-            'user' => ['class' => \yii\web\User::class],
-            'errorHandler' => ['class' => \yii\Psr7\web\ErrorHandler::class],
-        ]);
+        return array_merge(
+            parent::coreComponents(),
+            [
+                'request' => ['class' => \yii\Psr7\web\Request::class],
+                'response' => ['class' => \yii\Psr7\web\Response::class],
+                'session' => ['class' => \yii\web\Session::class],
+                'user' => ['class' => \yii\web\User::class],
+                'errorHandler' => ['class' => \yii\Psr7\web\ErrorHandler::class],
+            ]
+        );
     }
 
     /**

@@ -6,6 +6,6 @@ require_once __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-$config = require_once __DIR__ . '/config/config.php';
+$config = include_once __DIR__ . '/config/config.php';
 
 return $config;

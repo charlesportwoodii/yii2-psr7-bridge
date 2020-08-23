@@ -18,6 +18,8 @@
 
         <!-- CASE keyword must be indented 4 spaces from SWITCH keyword. -->
         <exclude name="PSR2.ControlStructures.SwitchDeclaration"/>
+
+         <exclude name="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace"/>
     </rule>
 
     <!-- ... other Yii2 specific rules. -->
