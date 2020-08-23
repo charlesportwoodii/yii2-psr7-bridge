@@ -2,9 +2,8 @@
 
 namespace yii\Psr7\tests;
 
-use yii\Psr7\tests\AbstractTestCase;
-
 use Laminas\Diactoros\ServerRequestFactory;
+use yii\Psr7\tests\AbstractTestCase;
 
 class ApplicationTest extends AbstractTestCase
 {
@@ -30,12 +29,10 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testCustomStatusCode()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
+        $request = ServerRequestFactory::fromGlobals([
             'REQUEST_URI' => 'site/statuscode',
             'REQUEST_METHOD' => 'GET'
-            ]
-        );
+        ]);
 
         $response = $this->app->handle($request);
 
@@ -48,12 +45,10 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testRedirect()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
+        $request = ServerRequestFactory::fromGlobals([
             'REQUEST_URI' => 'site/redirect',
             'REQUEST_METHOD' => 'GET'
-            ]
-        );
+        ]);
 
         $response = $this->app->handle($request);
 
@@ -67,12 +62,10 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testFragment()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
-            'REQUEST_URI' => 'site/refresh',
-            'REQUEST_METHOD' => 'GET'
-            ]
-        );
+        $request = ServerRequestFactory::fromGlobals([
+        'REQUEST_URI' => 'site/refresh',
+        'REQUEST_METHOD' => 'GET'
+        ]);
 
         $response = $this->app->handle($request);
 
@@ -141,12 +134,10 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testSetCookie()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
+        $request = ServerRequestFactory::fromGlobals([
             'REQUEST_URI' => 'site/cookie',
             'REQUEST_METHOD' => 'GET'
-            ]
-        );
+        ]);
 
         $response = $this->app->handle($request);
 
@@ -161,9 +152,10 @@ class ApplicationTest extends AbstractTestCase
             $params = \explode('; ', $cookie);
             $this->assertTrue(
                 \in_array(
-                    $params[0], [
-                    'test=test',
-                    'test2=test2'
+                    $params[0],
+                    [
+                        'test=test',
+                        'test2=test2'
                     ]
                 )
             );
@@ -201,13 +193,11 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testAuth()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
+        $request = ServerRequestFactory::fromGlobals([
             'REQUEST_URI' => 'site/auth',
             'REQUEST_METHOD' => 'GET',
             'HTTP_authorization' => 'Basic ' . \base64_encode('foo:bar')
-            ]
-        );
+        ]);
 
         $response = $this->app->handle($request);
         $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
@@ -221,18 +211,40 @@ class ApplicationTest extends AbstractTestCase
      */
     public function testAuthWithBadHeaders()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            [
+        $request = ServerRequestFactory::fromGlobals([
             'REQUEST_URI' => 'site/auth',
             'REQUEST_METHOD' => 'GET',
             'HTTP_authorization' => 'Basic foo:bar'
-            ]
-        );
+        ]);
 
         $response = $this->app->handle($request);
         $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $body = $response->getBody()->getContents();
         $this->assertEquals('{"username":null,"password":null}', $body);
+    }
+
+    public function test404()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/404',
+            'REQUEST_METHOD' => 'GET'
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testGeneralException()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/general-exception',
+            'REQUEST_METHOD' => 'GET'
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(500, $response->getStatusCode());
     }
 }

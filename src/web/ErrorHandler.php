@@ -43,10 +43,10 @@ class ErrorHandler extends \yii\web\ErrorHandler
             }
         } catch (\Exception $e) {
             // an other exception could be thrown while displaying the exception
-            $this->handleFallbackExceptionMessage($e, $exception);
+            return $this->handleFallbackExceptionMessage($e, $exception);
         } catch (\Throwable $e) {
             // additional check for \Throwable introduced in PHP 7
-            $this->handleFallbackExceptionMessage($e, $exception);
+            return $this->handleFallbackExceptionMessage($e, $exception);
         }
 
         $this->exception = null;
@@ -106,7 +106,7 @@ class ErrorHandler extends \yii\web\ErrorHandler
             } else {
                 $response->data = $result;
             }
-        } else if ($response->format === Response::FORMAT_HTML) {
+        } elseif ($response->format === Response::FORMAT_HTML) {
             if ($this->shouldRenderSimpleHtml()) {
                 // AJAX request
                 $response->data = '<pre>' . $this->htmlEncode(static::convertExceptionToString($exception)) . '</pre>';
@@ -118,12 +118,13 @@ class ErrorHandler extends \yii\web\ErrorHandler
                 }
                 $file = $useErrorView ? $this->errorView : $this->exceptionView;
                 $response->data = $this->renderFile(
-                    $file, [
-                    'exception' => $exception,
+                    $file,
+                    [
+                        'exception' => $exception,
                     ]
                 );
             }
-        } else if ($response->format === Response::FORMAT_RAW) {
+        } elseif ($response->format === Response::FORMAT_RAW) {
             $response->data = static::convertExceptionToString($exception);
         } else {
             $response->data = $this->convertExceptionToArray($exception);

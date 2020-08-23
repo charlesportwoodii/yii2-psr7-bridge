@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace yii\Psr7\web\monitor;
 
-use yii\Psr7\web\monitor\AbstractMonitor;
+use Yii;
 use yii\base\Event;
 
-use Yii;
+use yii\Psr7\web\monitor\AbstractMonitor;
 
 /**
  * EventMonitor listens for any and all events so that they

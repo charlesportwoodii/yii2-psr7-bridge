@@ -20,8 +20,8 @@
         "samdark/yii2-psr-log-target": "^1.0",
         "monolog/monolog": "~2.1.0",
         "squizlabs/php_codesniffer": "^3.2",
-        "spiral/roadrunner": "^1.2",
-        "phpunit/phpunit": "~9.2.0"
+        "phpunit/phpunit": "~9.2.0",
+        "spiral/roadrunner": "^1.8"
     },
     "autoload": {
         "psr-4": {

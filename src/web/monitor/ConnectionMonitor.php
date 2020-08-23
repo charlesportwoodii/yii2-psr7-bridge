@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace yii\Psr7\web\monitor;
 
-use yii\Psr7\web\Monitor;
+use Yii;
 
 use yii\base\Event;
 use yii\db\Connection;
-use Yii;
+use yii\Psr7\web\Monitor;
 
 /**
  * Handles any and all database connections that are established, and ensures

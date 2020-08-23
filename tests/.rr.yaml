@@ -1,0 +1,19 @@
+env:
+  YII_DEBUG: true
+  YII_ENV: dev
+  YII_ALIAS_WEBROOT: ./tests
+  YII_ALIAS_WEB: 'http://127.0.0.1:8080/'
+http:
+  address:   0.0.0.0:8080
+  workers:
+    command: "php ./rr-worker.php"
+    pool:
+      numWorkers: 1
+      maxJobs: 0
+      allocateTimeout: 15
+static:
+  # root directory for static file (http would not serve .php and .htaccess files).
+  dir:   "./"
+
+  # list of extensions for forbid for serving.
+  forbid: [".php"]

@@ -2,11 +2,12 @@
 
 namespace yii\Psr7\tests\controllers;
 
+use Yii;
 use yii\filters\auth\HttpBasicAuth;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\web\Cookie;
-use Yii;
+use yii\web\HttpException;
+use yii\web\Response;
 
 class SiteController extends Controller
 {
@@ -88,5 +89,15 @@ class SiteController extends Controller
             'username' => Yii::$app->request->getAuthUser(),
             'password' => Yii::$app->request->getAuthPassword()
         ];
+    }
+
+    public function action404()
+    {
+        throw new HttpException(404);
+    }
+
+    public function actionGeneralException()
+    {
+        throw new \Exception("General Exception");
     }
 }

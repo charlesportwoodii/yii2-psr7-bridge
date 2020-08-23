@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace yii\Psr7\tests;
 
-use yii\Psr7\web\Application;
-use Psr\Http\Message\ServerRequestInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use yii\Psr7\web\Application;
 
 class AbstractTestCase extends TestCase
 {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace yii\Psr7\filters;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-use yii\base\ActionFilter;
 use Yii;
+use yii\base\ActionFilter;
 
 class MiddlewareActionFilter extends ActionFilter implements RequestHandlerInterface
 {

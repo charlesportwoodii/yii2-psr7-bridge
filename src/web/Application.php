@@ -2,19 +2,19 @@
 
 namespace yii\Psr7\web;
 
-use yii\Psr7\web\monitor\EventMonitor;
-use yii\Psr7\web\monitor\ConnectionMonitor;
-use yii\Psr7\web\Response;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-
-use yii\base\Component;
-use Yii;
-
 use ReflectionMethod;
+
+use Yii;
+use yii\base\Component;
+
+use yii\Psr7\web\monitor\ConnectionMonitor;
+use yii\Psr7\web\monitor\EventMonitor;
+
+use yii\Psr7\web\Response;
 
 /**
  * A Yii2 compatible A PSR-15 RequestHandlerInterface Application component
@@ -223,12 +223,13 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     public function coreComponents()
     {
         return array_merge(
-            parent::coreComponents(), [
-            'request' => ['class' => \yii\Psr7\web\Request::class],
-            'response' => ['class' => \yii\Psr7\web\Response::class],
-            'session' => ['class' => \yii\web\Session::class],
-            'user' => ['class' => \yii\web\User::class],
-            'errorHandler' => ['class' => \yii\Psr7\web\ErrorHandler::class],
+            parent::coreComponents(),
+            [
+                'request' => ['class' => \yii\Psr7\web\Request::class],
+                'response' => ['class' => \yii\Psr7\web\Response::class],
+                'session' => ['class' => \yii\web\Session::class],
+                'user' => ['class' => \yii\web\User::class],
+                'errorHandler' => ['class' => \yii\Psr7\web\ErrorHandler::class],
             ]
         );
     }

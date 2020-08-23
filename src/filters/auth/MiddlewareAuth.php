@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace yii\Psr7\filters\auth;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-use yii\filters\auth\AuthMethod;
+use Yii;
 use yii\filters\auth\AuthInterface;
 
+use yii\filters\auth\AuthMethod;
+use yii\web\HttpException;
+use yii\web\IdentityInterface;
 use yii\web\Request;
 use yii\web\Response;
-use yii\web\HttpException;
 use yii\web\User;
-use yii\web\IdentityInterface;
-use Yii;
 
 class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandlerInterface
 {
@@ -89,7 +89,7 @@ class MiddlewareAuth extends AuthMethod implements AuthInterface, RequestHandler
 
         // If we get a continue status code and the expected user attribute is set
         // attempt to log this user in use yii\web\User::loginByAccessToken
-        if ($process->getStatusCode() === $this->continueStatusCode 
+        if ($process->getStatusCode() === $this->continueStatusCode
             && $process->hasHeader(static::TOKEN_ATTRIBUTE_NAME)
         ) {
             if ($identity = $user->loginByAccessToken(

@@ -454,7 +454,7 @@ class Request extends \yii\web\Request
     {
         return $this->getPsr7Request()->getAttribute($name, $default);
     }
-    
+
     /**
      * @inheritdoc
      */
