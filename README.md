@@ -72,7 +72,6 @@ For example, to Go/Roadrunner, you can use the component as follows:
 ```php
 #!/usr/bin/env php
 <?php
-
 ini_set('display_errors', 'stderr');
 
 // Set your normal YII_ definitions
