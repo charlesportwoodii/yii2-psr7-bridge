@@ -184,7 +184,7 @@ class ApplicationTest extends AbstractTestCase
         $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $body = $response->getBody()->getContents();
-        $testbody = '{"test":{"name":"test","value":"test","domain":"","expire":null,"path":"/","secure":false,"httpOnly":true,"sameSite":null}}';
+        $testbody = '{"test":{"name":"test","value":"test","domain":"","expire":null,"path":"/","secure":false,"httpOnly":true,"sameSite":"Lax"}}';
         $this->assertEquals($testbody, $body);
     }
 
