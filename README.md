@@ -88,32 +88,34 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
 $worker = Spiral\RoadRunner\Worker::create();
-$psrFactory = new Nyholm\Psr7\Factory\Psr17Factory();
-$psr7 = new Spiral\RoadRunner\Http\PSR7Worker($worker, $psrFactory, $psrFactory, $psrFactory);
+$psrServerFactory = new Laminas\Diactoros\ServerRequestFactory();
+$psrStreamFactory = new Laminas\Diactoros\StreamFactory();
+$psrUploadFileFactory = new Laminas\Diactoros\UploadedFileFactory();
+$psr7 = new Spiral\RoadRunner\Http\PSR7Worker($worker, $psrServerFactory, $psrStreamFactory, $psrUploadFileFactory);
 
 $config = require __DIR__ . '/../config/web.php';
 
 $application = (new \yii\Psr7\web\Application($config));
 
 // Handle each request in a loop
-while (true) {
-    try {
-        $request = $psr7->waitRequest();
+try {
+    while ($request = $psr7->waitRequest()) {
+        if (($request instanceof Psr\Http\Message\ServerRequestInterface)) {
+            try {
+                $response = $application->handle($request);
+                $psr7->respond($response);
+            } catch (\Throwable $e) {
+                $psr7->getWorker()->error((string)$e);
+            }
 
-        if (!($request instanceof Psr\Http\Message\ServerRequestInterface)) {
-            break;
+            if ($application->clean()) {
+                $psr7->getWorker()->stop();
+                return;
+            }
         }
-
-    } catch (\Throwable $e) {
-        $psr7->respond(new Nyholm\Psr7\Response(400, [], (string)$e));
     }
-
-    try {
-        $response = $application->handle($request);
-        $psr7->respond($response);
-    } catch (\Throwable $e) {
-        $psr7->respond(new Nyholm\Psr7\Response(500, [], (string)$e));
-    }
+} catch (\Throwable $e) {
+    $psr7->getWorker()->error((string)$e);
 }
 ```
 
