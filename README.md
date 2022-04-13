@@ -84,36 +84,38 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 // Alternatives set this in your rr.yaml file
 //defined('YII_ENV') or define('YII_ENV', \getenv('YII_ENV'));
 
-// Load your vendor dependencies and Yii2 autoloader
-require_once '/path/to/vendor/autoload.php';
-require_once '/path/to/vendor/yiisoft/yii2/Yii.php';
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
-// Roadrunner relay and PSR7 object
-$relay = new \Spiral\Goridge\StreamRelay(STDIN, STDOUT);
-$psr7 = new \Spiral\RoadRunner\PSR7Client(new \Spiral\RoadRunner\Worker($relay));
+$worker = Spiral\RoadRunner\Worker::create();
+$psrServerFactory = new Laminas\Diactoros\ServerRequestFactory();
+$psrStreamFactory = new Laminas\Diactoros\StreamFactory();
+$psrUploadFileFactory = new Laminas\Diactoros\UploadedFileFactory();
+$psr7 = new Spiral\RoadRunner\Http\PSR7Worker($worker, $psrServerFactory, $psrStreamFactory, $psrUploadFileFactory);
 
-// Load your configuration file
-$config = require_once '/path/to/config/config.php';
+$config = require __DIR__ . '/../config/web.php';
 
 $application = (new \yii\Psr7\web\Application($config));
 
 // Handle each request in a loop
-while ($request = $psr7->acceptRequest()) {
-    try {
-        $response = $application->handle($request);
-        $psr7->respond($response);
-    } catch (\Throwable $e) {
-        // \yii\Psr7\web\ErrorHandler should handle any exceptions
-        // however you should implement your custom error handler should anything slip past.
-        $psr7->getWorker()->error((string)$e);
-    }
+try {
+    while ($request = $psr7->waitRequest()) {
+        if (($request instanceof Psr\Http\Message\ServerRequestInterface)) {
+            try {
+                $response = $application->handle($request);
+                $psr7->respond($response);
+            } catch (\Throwable $e) {
+                $psr7->getWorker()->error((string)$e);
+            }
 
-    // Workers will steadily grow in memory with each request until PHP memory_limit is reached, resulting in a worker crash.
-    // With RoadRunner, you can tell the worker to shutdown if it approaches 10% of the maximum memory limit, allowing you to achieve better uptime.
-    if ($application->clean()) {
-        $psr7->getWorker()->stop();
-        return;
+            if ($application->clean()) {
+                $psr7->getWorker()->stop();
+                return;
+            }
+        }
     }
+} catch (\Throwable $e) {
+    $psr7->getWorker()->error((string)$e);
 }
 ```
 
