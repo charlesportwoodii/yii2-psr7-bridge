@@ -95,7 +95,11 @@ class Request extends \yii\web\Request
         $result = Yii::$app->getUrlManager()->parseRequest($this);
         if ($result !== false) {
             list($route, $params) = $result;
-            return [$route, $params + $this->getQueryParams()];
+            if ($this->_queryParams === null) {
+                $this->_queryParams = $params + $this->getPsr7Request()->getQueryParams();
+            }
+
+            return [$route, $this->_queryParams];
         }
 
         throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
@@ -201,7 +205,7 @@ class Request extends \yii\web\Request
      */
     public function getQueryParams()
     {
-        return $this->getPsr7Request()->getQueryParams();
+        return $this->_queryParams;
     }
 
     /**
@@ -480,3 +484,4 @@ class Request extends \yii\web\Request
         return $this->_hostInfo;
     }
 }
+

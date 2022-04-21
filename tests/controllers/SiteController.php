@@ -100,4 +100,14 @@ class SiteController extends Controller
     {
         throw new \Exception("General Exception");
     }
+
+    public function actionQuery($test) {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        return [
+            'test' => $test,
+            'q' => Yii::$app->request->get('q'),
+            'queryParams' => Yii::$app->request->getQueryParams()
+        ];
+    }
 }

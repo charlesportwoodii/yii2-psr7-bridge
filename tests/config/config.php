@@ -50,9 +50,9 @@ return [
             'enablePrettyUrl'       => true,
             'rules' => [
                 [
-                    'pattern'   => '/<controller>/<action>',
+                    'pattern'   => '/<controller>/<action>/<test:\w+>',
                     'route'     => '<controller>/<action>'
-                ]
+                ],
             ]
         ]
     ],
