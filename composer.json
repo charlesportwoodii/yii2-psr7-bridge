@@ -14,8 +14,7 @@
         "yiisoft/yii2": "^2.0.15",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
-        "laminas/laminas-diactoros": "^2.3",
-        "yidas/yii2-bower-asset": "2.0.13.1"
+        "laminas/laminas-diactoros": "^2.3"
     },
     "require-dev": {
         "samdark/yii2-psr-log-target": "^1.0",
@@ -33,5 +32,11 @@
         "psr-4": {
             "yii\\Psr7\\tests\\": "tests/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }
