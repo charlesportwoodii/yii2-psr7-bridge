@@ -101,6 +101,12 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
 
         $this->state = self::STATE_BEGIN;
         $this->preInit($config);
+
+        // Deregister any existing error handler since std_pad allocates 256K on each request
+        if ($errorHandler = $this->getErrorHandler() !== null) {
+            $errorHandler->unregister();
+        }
+
         $this->registerErrorHandler($config);
         Component::__construct($config);
 

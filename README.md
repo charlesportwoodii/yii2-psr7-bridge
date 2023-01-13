@@ -6,7 +6,7 @@ The usecase for this bridge is to enable Yii2 to be utilized with PSR-7 and PSR-
 
 > Note that this is currently very alpha quality. It "works" in that a PSR7 request is accepted as input and it returns a valid PSR7 response that is _mostly_ in line with what you would expect.
 
-> However, features and functionality are missing. Many things don't work, others have unexpectes side-effects. You are advised _not_ to use this package at this time.
+> However, features and functionality are missing. Many things don't work, others have unexpected side-effects. You are advised _not_ to use this package at this time.
 
 > See the `Current Status` checklist at the bottom of the README file for what is current implemented and what we could use help with.
 
@@ -121,7 +121,7 @@ try {
 
 ### Worker Crash Protection
 
-With each request PHP's memory usage will gradually increase. Calling `$application->clean()` will tell you if the current script usage is within 10% of your `memory_limit` ini set. While most workers will handle a out-of-memory crash exception, you can use this method to explicitly tell the current worker to stop and be reconstructed to avoid HTTP 500's thrown by out-of-memory issues.
+With each request PHP's memory usage will gradually increase. This is unavoidable due to Yii2 not being designed normal PHP call stacks (Nginx + PHP-FPM, Apache2 CGI, etc...), rather than request-request tools such as a RoadRunner. Calling `$application->clean()` will tell you if the current script usage is within 10% of your `memory_limit` ini set. While most workers will handle a out-of-memory crash exception, you can use this method to explicitly tell the current worker to stop and be reconstructed to avoid HTTP 500's thrown by out-of-memory issues. This will also resolve any unexpected memory leaks that occur due to framework memory reservation.
 
 ### Session
 
