@@ -44,6 +44,11 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
     private $monitors = [];
 
     /**
+     * @var bool Is this the first `reset()` call
+     */
+    private $firstReset = true;
+
+    /**
      * Overloaded constructor to persist configuration
      *
      * @param array $config
@@ -102,9 +107,12 @@ class Application extends \yii\web\Application implements RequestHandlerInterfac
         $this->state = self::STATE_BEGIN;
         $this->preInit($config);
 
-        // Deregister any existing error handler since std_pad allocates 256K on each request
-        if ($errorHandler = $this->getErrorHandler() !== null) {
-            $errorHandler->unregister();
+        // Deregister any existing error handler since `ErrorHandler::register()` allocates memory on each request
+        if ($this->firstReset) {
+            // Accessing `$this->errorHandler` on the first run would throw an error; skip it
+            $this->firstReset = false;
+        } elseif ($this->errorHandler !== null) {
+            $this->errorHandler->unregister();
         }
 
         $this->registerErrorHandler($config);
