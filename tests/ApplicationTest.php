@@ -264,4 +264,34 @@ class ApplicationTest extends AbstractTestCase
         $body = $response->getBody()->getContents();
         $this->assertEquals('{"test":"foo","q":1,"queryParams":{"test":"foo","q":1}}', $body);
     }
+
+    public function testFileStream()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/stream',
+            'REQUEST_METHOD' => 'GET'
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = $response->getBody()->getContents();
+        $this->assertEquals('text/yaml', $response->getHeaders()['Content-Type'][0]);
+    }
+
+    public function testFile()
+    {
+        $request = ServerRequestFactory::fromGlobals([
+            'REQUEST_URI' => 'site/file',
+            'REQUEST_METHOD' => 'GET'
+        ]);
+
+        $response = $this->app->handle($request);
+        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $body = $response->getBody()->getContents();
+        $this->assertEquals('text/yaml', $response->getHeaders()['Content-Type'][0]);
+    }
 }

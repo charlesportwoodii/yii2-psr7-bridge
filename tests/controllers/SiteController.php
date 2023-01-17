@@ -110,4 +110,22 @@ class SiteController extends Controller
             'queryParams' => Yii::$app->request->getQueryParams()
         ];
     }
+
+    public function actionStream() {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_RAW;
+        if ($stream = fopen(__DIR__ . '/../.rr.yaml', 'r')) {
+            return $response->sendStreamAsFile($stream, '.rr.yaml', [
+                'mimeType' => 'text/yaml',
+            ]);
+        }
+    }
+
+    public function actionFile() {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_RAW;
+        return $response->sendFile(__DIR__ . '/../.rr.yaml', '.rr.yaml', [
+            'mimeType' => 'text/yaml',
+        ]);
+    }
 }
