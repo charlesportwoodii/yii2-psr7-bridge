@@ -344,7 +344,7 @@ Before the application exists, it will call `getPsr7Response` on your `response`
 - [x] `yii-gii`.
 - [x] Fix fatal memory leak under load
 - [ ] `yii\filters\auth\CompositeAuth` compatability.
-- [ ] Implement comparable `sendFile`.
+- [x] Implement comparable `sendFile`, `sendStreamAsFile`
 - [ ] `yii\web\Request::$methodParam` support. (Not really applicable to `ServerRequestInterface`)
 - [ ] Test Coverage
 
