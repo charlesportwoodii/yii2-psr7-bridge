@@ -62,8 +62,8 @@ trait Psr7ResponseTrait
 
         // Manually set headers to ensure array headers are added.
         foreach ($this->getPsr7Headers() as $header => $value) {
-            if (\is_array($header)) {
-                foreach ($header as $v) {
+            if (\is_array($value)) {
+                foreach ($value as $v) {
                     $response = $response->withAddedHeader($header, $v);
                 }
             } else {
